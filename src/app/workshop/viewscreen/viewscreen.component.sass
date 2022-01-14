@@ -1,0 +1,46 @@
+.paint
+    background: black
+    border:1px solid cyan
+    border-radius: 10px
+    overflow: hidden
+    min-height: 30vh
+    max-height: 30vh
+    position: relative
+    min-width: 40vw
+
+.paint .planetoid
+    margin: auto
+    display: block
+
+.paint .satellite
+    position: absolute
+    width: 140px
+
+.satellite.left
+    left: 20px
+    top: 30px
+
+.satellite.right
+    right: 20px
+    top: 30px
+
+app-starfield
+    position: absolute
+    top: 0
+    left: 0
+
+.course
+    font-size: 11px
+    margin-left: 10px
+
+img.effect
+    position: absolute
+    left: calc(50% - 80px)
+    width: 160px
+    bottom: -10px
+    filter: sepia(1) hue-rotate(313deg) saturate(2)
+    &.tractor
+        left: 10px
+        bottom: 10px
+        transform: rotate(180deg)
+        filter: sepia(1) hue-rotate(67deg) saturate(2)

@@ -1,0 +1,13 @@
+:host{
+    border: 1px solid cyan;
+    background: #111;
+    color: cyan;
+    border-radius: 8px;
+    display: block;
+    padding: 4px;
+    font-family: 'Courier New', Courier, monospace;
+}
+.on, .off{
+    float: right;
+    font-weight: bold;
+}

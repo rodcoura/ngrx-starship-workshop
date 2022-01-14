@@ -1,0 +1,42 @@
+.menu{
+    margin: 5vh;
+    height: 90vh;
+    display: flex;
+    color: cyan;
+    flex-direction: column;
+    text-align: center;
+}
+:host{
+    height: 100vh;
+    // background: url(../../assets/space-1.jpg);
+}
+h3{
+    font-variant: small-caps;
+}
+$titleColor: white;
+$underline: darken(cyan, 19);
+h1{
+    font-size: 8em;
+    font-weight: 700;
+    color: $titleColor;
+    text-shadow: 1px 1px 1px $underline,
+        1px 2px 1px $underline,
+        1px 3px 1px $underline,
+        1px 4px 1px $underline,
+        1px 5px 1px $underline,
+        1px 6px 1px $underline,
+        1px 7px 1px $underline,
+        1px 8px 1px $underline,
+        1px 9px 1px $underline,
+        1px 10px 1px $underline,
+    1px 18px 6px rgba(16,16,16,0.4),
+    1px 22px 10px rgba(16,16,16,0.2),
+    1px 25px 35px rgba(16,16,16,0.2),
+    1px 30px 60px rgba(16,16,16,0.4);
+}
+app-starfield{
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    top: 0;
+}

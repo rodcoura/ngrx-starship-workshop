@@ -1,0 +1,3 @@
+<div *ngFor="let c of chat$|async" @fadeIn [class]="c.mood || ''">
+    {{c.transcription}}
+</div>

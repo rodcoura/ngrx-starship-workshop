@@ -1,0 +1,33 @@
+:host{
+    height: 24px;
+    position: relative;
+    display: block;
+    width: 100%;
+}
+.bar{
+    fill: url(#hull-deci);
+}
+svg stop{
+    transition: 0.45s;
+}
+.percent-0 stop{
+    &:nth-child(1){
+        stop-color: black
+    }
+    &:nth-child(11){
+        stop-color: black;
+    }
+}
+@for $i from 1 through 10 {
+    .percent-#{$i} stop{
+        @for $n from 1 through 11 {
+            &:nth-child(#{$n}){
+                @if $i+1 >= $n{
+                    stop-color: red;
+                } @else {
+                    stop-color: #000;
+                }
+            }
+        }
+    }
+}

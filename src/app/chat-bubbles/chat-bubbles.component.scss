@@ -1,0 +1,46 @@
+:host{
+    font-size: 11px;
+    width: 200px;
+    max-height: 39vh;
+    overflow: auto;
+    &::-webkit-scrollbar {
+        background: transparent;
+        width: 4pt;
+    }
+    &::-webkit-scrollbar-button {
+        display:none;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-track-piece {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: cyan;
+        border-radius: 4px;
+    }
+}
+div{
+    margin:2px;
+    margin-left: 0;
+    border-radius: 8px;
+    background: cyan;
+    color: black;
+    padding: 3px;
+    border-bottom: 4px solid #222;
+    border-right: 4px solid #222;
+    &:nth-child(n+2){
+        opacity: .8;
+        margin-left: 2px;
+    }
+    &:nth-child(n+4){
+        opacity: .4;
+    }
+    &:nth-child(n+5){
+        opacity: .2;
+    }
+    &.angry{
+        background: red;
+    }
+}

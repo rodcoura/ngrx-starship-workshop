@@ -1,0 +1,39 @@
+:host{
+    height: 30vh;
+    position: relative;
+}
+.bars{
+    fill: url(#engine-deci);
+    stroke: orange;
+    stroke-width: 1px;
+}
+svg stop{
+    transition: 0.45s;
+}
+.percent-0 stop{
+    &:nth-child(1){
+        stop-color: red;
+    }
+    &:nth-child(2){
+        stop-color: red;
+    }
+    &:nth-child(10){
+        stop-color: red;
+    }
+    &:nth-child(11){
+        stop-color: red;
+    }
+}
+@for $i from 1 through 10 {
+    .percent-#{$i} stop{
+        @for $n from 1 through 11 {
+            &:nth-child(#{$n}){
+                @if $i+1 >= $n{
+                    stop-color: orange;
+                } @else {
+                    stop-color: #000;
+                }
+            }
+        }
+    }
+}

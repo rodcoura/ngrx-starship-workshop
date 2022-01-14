@@ -1,0 +1,5 @@
+<div>
+    > DOCK_CLAMP 
+    <span *ngIf="!(clamped$ | async)" class="off">OFF</span>
+    <span *ngIf="clamped$ | async" class="on">SECURE</span>
+</div>

@@ -1,0 +1,5 @@
+<div *ngIf="(snitch.MetaStatistics$ | async) as stats">
+    {{stats.failures}} Failures <br>
+    {{stats.actions}} Actions <br>
+    {{stats.stateSize}} State Keys
+</div>

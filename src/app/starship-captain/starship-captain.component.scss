@@ -1,0 +1,11 @@
+:host, img{
+    height: 40vh;
+    position: relative;
+}
+app-metastats-widget{
+    position: absolute;
+    left: 100%;
+    bottom: 2em;
+    font-size: 11px;
+    width: 100px;
+}

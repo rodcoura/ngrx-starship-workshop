@@ -1,0 +1,23 @@
+:host{
+    background:#333;
+    height: 100vh;
+    display: block;
+    width: 100%;
+}
+.starship{
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    padding-left: 15vw;
+    padding-right: 15vw;
+    justify-content: space-between;
+}
+.upper{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+}
+.middle, .lower{
+    display: flex;
+    justify-content: center;
+}

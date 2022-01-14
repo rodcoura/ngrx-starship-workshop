@@ -1,0 +1,5 @@
+<div>
+    > TRACTOR
+    <span class="off" *ngIf="!(firing$ | async)">OFF</span>
+    <span class="on"  *ngIf="firing$ | async">PULL</span>
+</div>

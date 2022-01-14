@@ -1,0 +1,30 @@
+:host{
+    font-size: 11px;
+    width: 250px;
+    max-height: 20vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+div{
+    display: inline-block;
+    margin:2px;
+    // margin-left: 0;
+    // border-radius: 8px;
+    // background: grey;
+    color: cyan;
+    // padding: 3px;
+    // border-bottom: 4px solid #222;
+    // border-right: 4px solid #222;
+    &:nth-child(n+2){
+        opacity: .8;
+        // margin-left: 2px;
+    }
+    &:nth-child(n+3){
+        opacity: .4;
+    }
+    &:nth-child(n+4){
+        opacity: .2;
+    }
+}
