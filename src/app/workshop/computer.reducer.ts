@@ -24,7 +24,7 @@ export interface ComputerState{
      * 
      * feel free to change or remove this
      */
-    echoMessages: string[]
+    echoMessages: string[],
     //TODO: add a lot more state!
 }
 
