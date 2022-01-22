@@ -16,7 +16,7 @@ import { selectViewscreen } from '../computer.selectors';
  * you may ADD to the interface but may not REMOVE from it
  */
 export interface ViewscreenState {
-  location: SolarSystemLocation,
+  location?: SolarSystemLocation,
   course?: SolarSystemLocation,
   leftImage: string|undefined,
   centerImage: string|undefined,
