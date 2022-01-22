@@ -6,7 +6,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
-import { disengageDockingClamp, disengageEngines, disengageLasers, disengageShields, disengageTractorbeam, echo, engageDockingClamp, engageTractorbeam, fullyEngageEngines, fullyEngageLasers, fullyEngageShields, halfwayEngageEngines, halfwayEngageLasers, halfwayEngageShields, loadNavDataSuccess, plotCourseAsteroidBelt, plotCourseLEO, plotCourseLunaOrbit, slowlyEngageEngines, slowlyEngageLasers, slowlyEngageShields } from "./computer.actions";
+import * as act from "./computer.actions";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -49,6 +49,8 @@ export interface ComputerState {
     course?: NavigationData,
     docking: boolean,
     tractor: boolean,
+    satelliteView: boolean,
+    asteroidView: boolean,
 }
 
 export const InitialComputerState: ComputerState = {
@@ -59,12 +61,14 @@ export const InitialComputerState: ComputerState = {
     laser: 0,
     docking: true,
     tractor: false,
-    locations: []
+    locations: [],
+    satelliteView: true,
+    asteroidView: false,
 }
 
 export const computerReducer = createReducer<ComputerState>(
     InitialComputerState,
-    on(echo, (state, action) => {
+    on(act.echo, (state, action) => {
         return {
             ...state,
             echoMessages: [
@@ -73,19 +77,19 @@ export const computerReducer = createReducer<ComputerState>(
             ]
         };
     }),
-    on(loadNavDataSuccess, (state, action) => {
+    on(act.loadNavDataSuccess, (state, action) => {
         return {
             ...state,
             locations: action.navs
         };
     }),
-    on(disengageDockingClamp, (state, action) => {
+    on(act.disengageDockingClamp, (state, action) => {
         return {
             ...state,
             docking: false
         }
     }),
-    on(disengageEngines, (state, action) => {
+    on(act.disengageEngines, (state, action) => {
         return {
             ...state,
             engine: 0,
@@ -93,37 +97,37 @@ export const computerReducer = createReducer<ComputerState>(
             course: undefined
         }
     }),
-    on(disengageShields, (state, action) => {
+    on(act.disengageShields, (state, action) => {
         return {
             ...state,
             shield: 0
         }
     }),
-    on(disengageLasers, (state, action) => {
+    on(act.disengageLasers, (state, action) => {
         return {
             ...state,
             laser: 0
         }
     }),
-    on(disengageTractorbeam, (state, action) => {
+    on(act.disengageTractorbeam, (state, action) => {
         return {
             ...state,
-            tractor: false
+            tractor: false,
         }
     }),
-    on(engageDockingClamp, (state, action) => {
+    on(act.engageDockingClamp, (state, action) => {
         return {
             ...state,
             docking: true
         }
     }),
-    on(engageTractorbeam, (state, action) => {
+    on(act.engageTractorbeam, (state, action) => {
         return {
             ...state,
             tractor: true
         }
     }),
-    on(fullyEngageEngines, (state, action) => {
+    on(act.fullyEngageEngines, (state, action) => {
         return {
             ...state,
             engine: 10,
@@ -131,19 +135,19 @@ export const computerReducer = createReducer<ComputerState>(
             laser: 0,
         }
     }),
-    on(halfwayEngageEngines, (state, action) => {
+    on(act.halfwayEngageEngines, (state, action) => {
         return {
             ...state,
             engine: 5
         }
     }),
-    on(slowlyEngageEngines, (state, action) => {
+    on(act.slowlyEngageEngines, (state, action) => {
         return {
             ...state,
             engine: 1
         }
     }),
-    on(fullyEngageShields, (state, action) => {
+    on(act.fullyEngageShields, (state, action) => {
         return {
             ...state,
             shield: 10,
@@ -151,57 +155,60 @@ export const computerReducer = createReducer<ComputerState>(
             laser: 0,
         }
     }),
-    on(halfwayEngageShields, (state, action) => {
+    on(act.halfwayEngageShields, (state, action) => {
         return {
             ...state,
             shield: 5
         }
     }),
-    on(slowlyEngageShields, (state, action) => {
+    on(act.slowlyEngageShields, (state, action) => {
         return {
             ...state,
             shield: 1
         }
     }),
-    on(fullyEngageLasers, (state, action) => {
+    on(act.fullyEngageLasers, (state, action) => {
         return {
             ...state,
             laser: 10,
             engine: 0,
-            shield: 0,
+            shield: 0
         }
     }),
-    on(halfwayEngageLasers, (state, action) => {
+    on(act.halfwayEngageLasers, (state, action) => {
         return {
             ...state,
             laser: 5
         }
     }),
-    on(slowlyEngageLasers, (state, action) => {
+    on(act.slowlyEngageLasers, (state, action) => {
         return {
             ...state,
             laser: 1
         }
     }),
-    on(plotCourseLEO, (state, action) => {
+    on(act.plotCourseLEO, (state, action) => {
         return {
             ...state,
             course: state.locations.find(a => a.location == 'LEO'),
-            locationPlace: undefined
+            locationPlace: "LEO",
+            satelliteView: true
         }
     }),
-    on(plotCourseLunaOrbit, (state, action) => {
+    on(act.plotCourseLunaOrbit, (state, action) => {
         return {
             ...state,
             course: state.locations.find(a => a.location == 'LunaOrbit'),
-            locationPlace: undefined
+            locationPlace: "LunaOrbit",
+            satelliteView: true
         }
     }),
-    on(plotCourseAsteroidBelt, (state, action) => {
+    on(act.plotCourseAsteroidBelt, (state, action) => {
         return {
             ...state,
             course: state.locations.find(a => a.location == 'AsteroidBelt'),
-            locationPlace: undefined
+            locationPlace: undefined,
+            satelliteView: false
         }
     }),
 );
