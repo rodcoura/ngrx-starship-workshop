@@ -40,10 +40,10 @@ export class ComputerService {
 
     private parseDirectiveToAction(directive: IComputerDirective): string {
         const directiveT = [
-            directive.adverb ?? '',
-            directive.verb ?? '',
-            directive.directObject ?? '',
-            directive.adjectivalPhrase ?? ''
+            directive.adverb,
+            directive.verb,
+            directive.directObject,
+            directive.adjectivalPhrase
         ].filter(a => a);
 
         return `[computer] ${directiveT.join(' ')}`;

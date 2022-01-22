@@ -83,50 +83,20 @@ export const computerReducer = createReducer<ComputerState>(
             locations: action.navs
         };
     }),
-    on(act.disengageDockingClamp, (state, action) => {
-        return {
-            ...state,
-            docking: false
-        }
-    }),
-    on(act.disengageEngines, (state, action) => {
-        return {
-            ...state,
-            engine: 0,
-            locationPlace: state.course?.location,
-            course: undefined
-        }
-    }),
-    on(act.disengageShields, (state, action) => {
-        return {
-            ...state,
-            shield: 0
-        }
-    }),
-    on(act.disengageLasers, (state, action) => {
-        return {
-            ...state,
-            laser: 0
-        }
-    }),
-    on(act.disengageTractorbeam, (state, action) => {
-        return {
-            ...state,
-            tractor: false,
-        }
-    }),
+    /* Docking */
     on(act.engageDockingClamp, (state, action) => {
         return {
             ...state,
             docking: true
         }
     }),
-    on(act.engageTractorbeam, (state, action) => {
+    on(act.disengageDockingClamp, (state, action) => {
         return {
             ...state,
-            tractor: true
+            docking: false
         }
     }),
+    /* Engines */
     on(act.fullyEngageEngines, (state, action) => {
         return {
             ...state,
@@ -147,6 +117,15 @@ export const computerReducer = createReducer<ComputerState>(
             engine: 1
         }
     }),
+    on(act.disengageEngines, (state, action) => {
+        return {
+            ...state,
+            engine: 0,
+            locationPlace: state.course?.location,
+            course: undefined
+        }
+    }),
+    /* Shields */
     on(act.fullyEngageShields, (state, action) => {
         return {
             ...state,
@@ -167,6 +146,13 @@ export const computerReducer = createReducer<ComputerState>(
             shield: 1
         }
     }),
+    on(act.disengageShields, (state, action) => {
+        return {
+            ...state,
+            shield: 0
+        }
+    }),
+    /* Lasers */
     on(act.fullyEngageLasers, (state, action) => {
         return {
             ...state,
@@ -187,6 +173,26 @@ export const computerReducer = createReducer<ComputerState>(
             laser: 1
         }
     }),
+    on(act.disengageLasers, (state, action) => {
+        return {
+            ...state,
+            laser: 0
+        }
+    }),
+    /* Tractorbeam */
+    on(act.engageTractorbeam, (state, action) => {
+        return {
+            ...state,
+            tractor: true
+        }
+    }),
+    on(act.disengageTractorbeam, (state, action) => {
+        return {
+            ...state,
+            tractor: false
+        }
+    }),
+    /* Plot course */
     on(act.plotCourseLEO, (state, action) => {
         return {
             ...state,
