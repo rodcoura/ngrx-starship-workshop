@@ -23,7 +23,7 @@ export const selectViewscreen = createSelector(
             location: state.locationPlace,
             course: state.course,
             leftImage: (state.hasSatellite || state.tractorbeam) ? location?.leftImage : undefined,
-            centerImage: state.asteroidInRange ? location?.centerImage : undefined,
+            centerImage: (location?.location == 'AsteroidBelt' && !state.asteroidInRange) ? undefined : location?.centerImage,
             rightImage: location?.rightImage,
             laser: state.laser > 0,
             tractor: state.tractorbeam,
