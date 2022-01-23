@@ -21,12 +21,13 @@ export const selectViewscreen = createSelector(
         const view: ViewscreenState = {
             location: state.locationPlace,
             course: state.course?.location,
-            leftImage: location?.leftImage,
+            leftImage: state.hasSatellite || state.tractorbeam ? location?.leftImage : undefined,
             centerImage: location?.centerImage,
             rightImage: location?.rightImage,
             laser: state.laser > 0,
-            tractor: state.tractor,
+            tractor: state.tractorbeam,
         };
+
         return view;
     }
 );
@@ -62,7 +63,7 @@ export const selectDockingClamp = createSelector(
 export const selectTractorbeam = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.tractor;
+        return state.tractorbeam;
     }
 );
 

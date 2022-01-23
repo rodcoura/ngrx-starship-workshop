@@ -1,6 +1,6 @@
 <div class="paint">
     <ng-container *ngIf="view$ | async as view">
-        <div class="course">Currently in {{view.location}}</div>
+        <div class="course" *ngIf="!view.course" >Currently in {{view.location}}</div>
         <div *ngIf="view.course" class="course">Course: {{view.course}}</div>
         <img *ngIf="view.leftImage" [src]="view.leftImage" alt="" class="satellite left">
         <img *ngIf="view.centerImage" [src]="view.centerImage" alt="" class="planetoid">

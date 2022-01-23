@@ -48,9 +48,9 @@ export interface ComputerState {
     locationPlace?: SolarSystemLocation,
     course?: NavigationData,
     docking: boolean,
-    tractor: boolean,
-    satelliteView: boolean,
-    asteroidView: boolean,
+    tractorbeam: boolean,
+    hasSatellite: boolean,
+    asteroidDestroyed?: boolean,
 }
 
 export const InitialComputerState: ComputerState = {
@@ -60,11 +60,15 @@ export const InitialComputerState: ComputerState = {
     engine: 0,
     laser: 0,
     docking: true,
-    tractor: false,
+    tractorbeam: false,
     locations: [],
-    satelliteView: true,
-    asteroidView: false,
+    hasSatellite: true,
+    asteroidDestroyed: false,
 }
+
+export const computerReducerNEW = createReducer<ComputerState>(
+    InitialComputerState,
+);
 
 export const computerReducer = createReducer<ComputerState>(
     InitialComputerState,
@@ -72,8 +76,8 @@ export const computerReducer = createReducer<ComputerState>(
         return {
             ...state,
             echoMessages: [
-                action.message,
-                ...state.echoMessages
+                ...state.echoMessages,
+                ...action.messages
             ]
         };
     }),
@@ -158,38 +162,39 @@ export const computerReducer = createReducer<ComputerState>(
             ...state,
             laser: 10,
             engine: 0,
-            shield: 0
+            shield: 0,
         }
     }),
     on(act.halfwayEngageLasers, (state, action) => {
         return {
             ...state,
-            laser: 5
+            laser: 5,
         }
     }),
     on(act.slowlyEngageLasers, (state, action) => {
         return {
             ...state,
-            laser: 1
+            laser: 1,
         }
     }),
     on(act.disengageLasers, (state, action) => {
         return {
             ...state,
-            laser: 0
+            laser: 0,
         }
     }),
     /* Tractorbeam */
     on(act.engageTractorbeam, (state, action) => {
         return {
             ...state,
-            tractor: true
+            tractorbeam: true
         }
     }),
     on(act.disengageTractorbeam, (state, action) => {
         return {
             ...state,
-            tractor: false
+            tractorbeam: false,
+            hasSatellite: false
         }
     }),
     /* Plot course */
@@ -198,7 +203,6 @@ export const computerReducer = createReducer<ComputerState>(
             ...state,
             course: state.locations.find(a => a.location == 'LEO'),
             locationPlace: "LEO",
-            satelliteView: true
         }
     }),
     on(act.plotCourseLunaOrbit, (state, action) => {
@@ -206,15 +210,15 @@ export const computerReducer = createReducer<ComputerState>(
             ...state,
             course: state.locations.find(a => a.location == 'LunaOrbit'),
             locationPlace: "LunaOrbit",
-            satelliteView: true
+            hasSatellite: true
         }
     }),
     on(act.plotCourseAsteroidBelt, (state, action) => {
         return {
             ...state,
             course: state.locations.find(a => a.location == 'AsteroidBelt'),
-            locationPlace: undefined,
-            satelliteView: false
+            locationPlace: 'AsteroidBelt',
+            hasSatellite: false
         }
     }),
 );
