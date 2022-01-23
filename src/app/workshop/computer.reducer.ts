@@ -50,7 +50,7 @@ export interface ComputerState {
     docking: boolean,
     tractorbeam: boolean,
     hasSatellite: boolean,
-    asteroidDestroyed?: boolean,
+    asteroidInRange?: boolean,
 }
 
 export const InitialComputerState: ComputerState = {
@@ -63,7 +63,7 @@ export const InitialComputerState: ComputerState = {
     tractorbeam: false,
     locations: [],
     hasSatellite: true,
-    asteroidDestroyed: false,
+    asteroidInRange: false,
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -84,19 +84,24 @@ export const computerReducer = createReducer<ComputerState>(
         };
     }),
     on(act.engage, (state, action) => {
-        let params : { [key: string] : string | number | boolean | undefined } = {};
+        let params: { [key: string]: string | number | boolean | undefined } = {};
 
-        if(action.keyID === 'laser' && action.param[action.keyID] == 10) {
-            params['engines'] = 0;
-            params['shields'] = 0;
+        if (action.keyID === 'laser') {
+            if (action.param[action.keyID] == 5)
+                params['asteroidInRange'] = false;
+
+            if (action.param[action.keyID] == 10) {
+                params['engines'] = 0;
+                params['shields'] = 0;
+            }
         }
 
-        if(action.keyID === 'engines' && action.param[action.keyID] == 10) {
+        if (action.keyID === 'engines' && action.param[action.keyID] == 10) {
             params['laser'] = 0;
             params['shields'] = 0;
         }
 
-        if(action.keyID === 'shields' && action.param[action.keyID] == 10) {
+        if (action.keyID === 'shields' && action.param[action.keyID] == 10) {
             params['laser'] = 0;
             params['engines'] = 0;
         }
@@ -108,13 +113,13 @@ export const computerReducer = createReducer<ComputerState>(
         };
     }),
     on(act.disengage, (state, action) => {
-        let params : { [key: string] : string | number | boolean | undefined } = {};
-        
-        if(action.keyID === 'tractorbeam') {
+        let params: { [key: string]: string | number | boolean | undefined } = {};
+
+        if (action.keyID === 'tractorbeam') {
             params['hasSatellite'] = false;
         }
 
-        if(action.keyID === 'engines') {
+        if (action.keyID === 'engines') {
             params['locationPlace'] = state.course;
             params['course'] = undefined;
         }
@@ -126,20 +131,21 @@ export const computerReducer = createReducer<ComputerState>(
         };
     }),
     on(act.plot, (state, action) => {
-        let params : { [key: string] : string | number | boolean | undefined | NavigationData } = {};
+        let params: { [key: string]: string | number | boolean | undefined | NavigationData } = {};
 
         params['locationPlace'] = action.param[action.keyID];
 
-        if(action.param[action.keyID] === 'LEO') {
+        if (action.param[action.keyID] === 'LEO') {
             params['locationPlace'] = 'LEO';
         }
 
-        if(action.param[action.keyID] === 'AsteroidBelt') {
+        if (action.param[action.keyID] === 'AsteroidBelt') {
             params['locationPlace'] = 'AsteroidBelt';
             params['hasSatellite'] = false;
+            params['asteroidInRange'] = true;
         }
 
-        if(action.param[action.keyID] === 'LunaOrbit') {
+        if (action.param[action.keyID] === 'LunaOrbit') {
             params['hasSatellite'] = true;
         }
 

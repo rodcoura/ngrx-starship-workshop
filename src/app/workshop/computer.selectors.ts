@@ -18,12 +18,12 @@ export const selectViewscreen = createSelector(
     (state: ComputerState) => {
         const location = state.locations.find(a => a.location == state.locationPlace);
         const course = state.locations.find(a => a.location == state.course);
-        
+
         const view: ViewscreenState = {
             location: state.locationPlace,
             course: state.course,
-            leftImage: state.hasSatellite || state.tractorbeam ? location?.leftImage : undefined,
-            centerImage: state.laser > 1 ? undefined : location?.centerImage,
+            leftImage: (state.hasSatellite || state.tractorbeam) ? location?.leftImage : undefined,
+            centerImage: state.asteroidInRange ? location?.centerImage : undefined,
             rightImage: location?.rightImage,
             laser: state.laser > 0,
             tractor: state.tractorbeam,

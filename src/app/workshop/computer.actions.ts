@@ -17,7 +17,7 @@ export class ComputerAction {
     constructor(action: string, keyID: string) {
         this.action = action;
         this.keyID = keyID;
-        this.parameters = {};    
+        this.parameters = {};
     }
 
     addParam(key: string, value:string | number | boolean | undefined) {
