@@ -31,13 +31,13 @@ export interface ComputerState {
      * 
      * Must be from 0-10
      */
-    shield: number,
+    shields: number,
     /**
      * the amount of power to the engine.
      * 
      * Must be from 0-10
      */
-    engine: number,
+    engines: number,
     /**
      * the amount of power to the laser.
      * 
@@ -46,7 +46,7 @@ export interface ComputerState {
     laser: number,
     locations: NavigationData[],
     locationPlace?: SolarSystemLocation,
-    course?: NavigationData,
+    course?: SolarSystemLocation,
     docking: boolean,
     tractorbeam: boolean,
     hasSatellite: boolean,
@@ -56,8 +56,8 @@ export interface ComputerState {
 export const InitialComputerState: ComputerState = {
     echoMessages: [],
     locationPlace: 'LEO',
-    shield: 0,
-    engine: 0,
+    shields: 0,
+    engines: 0,
     laser: 0,
     docking: true,
     tractorbeam: false,
@@ -65,66 +65,6 @@ export const InitialComputerState: ComputerState = {
     hasSatellite: true,
     asteroidDestroyed: false,
 }
-
-export const computerReducerNEW = createReducer<ComputerState>(
-    InitialComputerState,
-    on(act.echo, (state, action) => {
-        return {
-            ...state,
-            echoMessages: [
-                ...state.echoMessages,
-                ...action.messages
-            ]
-        };
-    }),
-    on(act.engage, (state, action) => {
-        if(action.keyID === 'laser' && action.param[action.keyID] == 10) {
-            action.param['engine'] = 0;
-            action.param['shield'] = 0;
-        }
-
-        if(action.keyID === 'engine' && action.param[action.keyID] == 10) {
-            action.param['laser'] = 0;
-            action.param['shield'] = 0;
-        }
-
-        if(action.keyID === 'shield' && action.param[action.keyID] == 10) {
-            action.param['laser'] = 0;
-            action.param['engine'] = 0;
-        }
-
-        if(action.keyID === 'tractorbeam' && action.param[action.keyID] == false) {
-            action.param['hasSatellite'] = false;
-        }
-
-        return {
-            ...state,
-            ...action.param
-        };
-    }),
-    on(act.disengage, (state, action) => {
-        return {
-            ...state,
-            ...action.param
-        };
-    }),
-    on(act.plot, (state, action) => {
-        action.param['locationPlace'] = action.param[action.keyID];
-
-        if(action.param[action.keyID] === 'AstreroidBelt') {
-            action.param['locationPlace'] = undefined;
-        }
-
-        if(action.param[action.keyID] === 'LunaOrbit') {
-            action.param['hasSatellite'] = true;
-        }
-
-        return {
-            ...state,
-            ...action.param
-        };
-    }),
-);
 
 export const computerReducer = createReducer<ComputerState>(
     InitialComputerState,
@@ -143,139 +83,70 @@ export const computerReducer = createReducer<ComputerState>(
             locations: action.navs
         };
     }),
-    /* Docking */
-    on(act.engageDockingClamp, (state, action) => {
+    on(act.engage, (state, action) => {
+        let params : { [key: string] : string | number | boolean | undefined } = {};
+
+        if(action.keyID === 'laser' && action.param[action.keyID] == 10) {
+            params['engines'] = 0;
+            params['shields'] = 0;
+        }
+
+        if(action.keyID === 'engines' && action.param[action.keyID] == 10) {
+            params['laser'] = 0;
+            params['shields'] = 0;
+        }
+
+        if(action.keyID === 'shields' && action.param[action.keyID] == 10) {
+            params['laser'] = 0;
+            params['engines'] = 0;
+        }
+
         return {
             ...state,
-            docking: true
-        }
+            ...action.param,
+            ...params
+        };
     }),
-    on(act.disengageDockingClamp, (state, action) => {
+    on(act.disengage, (state, action) => {
+        let params : { [key: string] : string | number | boolean | undefined } = {};
+        
+        if(action.keyID === 'tractorbeam') {
+            params['hasSatellite'] = false;
+        }
+
+        if(action.keyID === 'engines') {
+            params['locationPlace'] = state.course;
+            params['course'] = undefined;
+        }
+
         return {
             ...state,
-            docking: false
-        }
+            ...action.param,
+            ...params
+        };
     }),
-    /* Engines */
-    on(act.fullyEngageEngines, (state, action) => {
+    on(act.plot, (state, action) => {
+        let params : { [key: string] : string | number | boolean | undefined | NavigationData } = {};
+
+        params['locationPlace'] = action.param[action.keyID];
+
+        if(action.param[action.keyID] === 'LEO') {
+            params['locationPlace'] = 'LEO';
+        }
+
+        if(action.param[action.keyID] === 'AsteroidBelt') {
+            params['locationPlace'] = 'AsteroidBelt';
+            params['hasSatellite'] = false;
+        }
+
+        if(action.param[action.keyID] === 'LunaOrbit') {
+            params['hasSatellite'] = true;
+        }
+
         return {
             ...state,
-            engine: 10,
-            shield: 0,
-            laser: 0,
-        }
-    }),
-    on(act.halfwayEngageEngines, (state, action) => {
-        return {
-            ...state,
-            engine: 5
-        }
-    }),
-    on(act.slowlyEngageEngines, (state, action) => {
-        return {
-            ...state,
-            engine: 1
-        }
-    }),
-    on(act.disengageEngines, (state, action) => {
-        return {
-            ...state,
-            engine: 0,
-            locationPlace: state.course?.location,
-            course: undefined
-        }
-    }),
-    /* Shields */
-    on(act.fullyEngageShields, (state, action) => {
-        return {
-            ...state,
-            shield: 10,
-            engine: 0,
-            laser: 0,
-        }
-    }),
-    on(act.halfwayEngageShields, (state, action) => {
-        return {
-            ...state,
-            shield: 5
-        }
-    }),
-    on(act.slowlyEngageShields, (state, action) => {
-        return {
-            ...state,
-            shield: 1
-        }
-    }),
-    on(act.disengageShields, (state, action) => {
-        return {
-            ...state,
-            shield: 0
-        }
-    }),
-    /* Lasers */
-    on(act.fullyEngageLasers, (state, action) => {
-        return {
-            ...state,
-            laser: 10,
-            engine: 0,
-            shield: 0,
-        }
-    }),
-    on(act.halfwayEngageLasers, (state, action) => {
-        return {
-            ...state,
-            laser: 5,
-        }
-    }),
-    on(act.slowlyEngageLasers, (state, action) => {
-        return {
-            ...state,
-            laser: 1,
-        }
-    }),
-    on(act.disengageLasers, (state, action) => {
-        return {
-            ...state,
-            laser: 0,
-        }
-    }),
-    /* Tractorbeam */
-    on(act.engageTractorbeam, (state, action) => {
-        return {
-            ...state,
-            tractorbeam: true
-        }
-    }),
-    on(act.disengageTractorbeam, (state, action) => {
-        return {
-            ...state,
-            tractorbeam: false,
-            hasSatellite: false
-        }
-    }),
-    /* Plot course */
-    on(act.plotCourseLEO, (state, action) => {
-        return {
-            ...state,
-            course: state.locations.find(a => a.location == 'LEO'),
-            locationPlace: "LEO",
-        }
-    }),
-    on(act.plotCourseLunaOrbit, (state, action) => {
-        return {
-            ...state,
-            course: state.locations.find(a => a.location == 'LunaOrbit'),
-            locationPlace: "LunaOrbit",
-            hasSatellite: true
-        }
-    }),
-    on(act.plotCourseAsteroidBelt, (state, action) => {
-        return {
-            ...state,
-            course: state.locations.find(a => a.location == 'AsteroidBelt'),
-            locationPlace: 'AsteroidBelt',
-            hasSatellite: false
-        }
+            ...action.param,
+            ...params
+        };
     }),
 );
-

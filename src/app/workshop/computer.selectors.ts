@@ -17,19 +17,13 @@ export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
         const location = state.locations.find(a => a.location == state.locationPlace);
-
-        console.warn('location', state.locationPlace)
-        console.warn('course', state.course?.location)
-        console.warn('satellite correct', state.hasSatellite || state.tractorbeam)
-        console.warn('satellite Attempt I', state.locationPlace === 'LunaOrbit' || state.tractorbeam)
-        console.warn('satellite Attempt II', state.locationPlace === 'LunaOrbit' || state.course?.location !== 'AsteroidBelt' || state.tractorbeam)
-        console.log('interaction')
+        const course = state.locations.find(a => a.location == state.course);
         
         const view: ViewscreenState = {
             location: state.locationPlace,
-            course: state.course?.location,
+            course: state.course,
             leftImage: state.hasSatellite || state.tractorbeam ? location?.leftImage : undefined,
-            centerImage: location?.centerImage,
+            centerImage: state.laser > 1 ? undefined : location?.centerImage,
             rightImage: location?.rightImage,
             laser: state.laser > 0,
             tractor: state.tractorbeam,
@@ -42,14 +36,14 @@ export const selectViewscreen = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.engine;
+        return state.engines;
     }
 );
 
 export const selectShields = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.shield;
+        return state.shields;
     }
 );
 

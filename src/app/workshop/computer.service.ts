@@ -2,7 +2,8 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { IComputerDirective, SolarSystemLocation } from "../challenge.service";
-import { echo, ComputerAction, loadNavData } from "./computer.actions";
+import * as act from "./computer.actions";
+import { ComputerAction } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -19,7 +20,7 @@ export class ComputerService {
      * this is called on the captain's very first voice event
      */
     public Initialize() {
-        this.store.dispatch(loadNavData());
+        this.store.dispatch(act.loadNavData());
     }
     /**
      * this is called when the captain commands the computer to do one or more things
@@ -28,29 +29,14 @@ export class ComputerService {
         let messages : string[] = [];
         directives.forEach(directive => {
             const parsedDirective = this.parseDirectiveToAction(directive);
-            const parsedDirectiveNEW = this.parseDirectiveToActionNEW(directive);
             messages.push(this.directiveToComputerMessage(directive));
-            this.store.dispatch({ type: parsedDirective });
+            this.store.dispatch({ type: `[computer] ${parsedDirective.action}`, ...parsedDirective.toDispatchParameters() });
         });
-        this.store.dispatch(echo({ messages }));
+        this.store.dispatch(act.echo({ messages }));
         messages = [];
     }
 
-    private parseDirectiveToAction(directive: IComputerDirective): string {
-        const directiveT = [
-            directive.adverb,
-            directive.verb,
-            directive.directObject,
-            directive.adjectivalPhrase
-        ].filter(a => a);
-
-        //console.warn(`[computer] ${directiveT.join(' ')}`);
-        //console.log(this.parseDirectiveToActionNEW(directive).toString());
-
-        return `[computer] ${directiveT.join(' ')}`;
-    }
-
-    private parseDirectiveToActionNEW(directive: IComputerDirective): ComputerAction {
+    private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {
         const paramKey: string = directive.directObject.split(' ')[0];
         let paramValue: number | boolean | SolarSystemLocation | undefined;
 

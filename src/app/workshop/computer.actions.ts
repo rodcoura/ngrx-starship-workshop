@@ -24,8 +24,11 @@ export class ComputerAction {
         this.parameters[key] = value; 
     }
 
-    toDispatch() {
-        
+    toDispatchParameters() {
+        return {
+            keyID: this.keyID,
+            param: this.parameters
+        }
     }
 }
 
@@ -45,24 +48,3 @@ export const loadNavDataError = createAction('[computer] Load Navigation Data Er
 export const engage = createAction('[computer] engage', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
 export const disengage = createAction('[computer] disengage', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
 export const plot = createAction('[computer] plot', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
-
-export const engageDockingClamp = createAction('[computer] engage docking clamp');
-export const disengageDockingClamp = createAction('[computer] disengage docking clamp');
-export const engageTractorbeam = createAction('[computer] engage tractorbeam');
-export const disengageTractorbeam = createAction('[computer] disengage tractorbeam');
-export const fullyEngageEngines = createAction('[computer] fully engage engines');
-export const halfwayEngageEngines = createAction('[computer] halfway engage engines');
-export const slowlyEngageEngines = createAction('[computer] slowly engage engines');
-export const disengageEngines = createAction('[computer] disengage engines');
-export const fullyEngageShields = createAction('[computer] fully engage shields');
-export const halfwayEngageShields = createAction('[computer] halfway engage shields');
-export const slowlyEngageShields = createAction('[computer] slowly engage shields');
-export const disengageShields = createAction('[computer] disengage shields');
-export const fullyEngageLasers = createAction('[computer] fully engage laser');
-export const halfwayEngageLasers = createAction('[computer] halfway engage laser');
-export const slowlyEngageLasers = createAction('[computer] slowly engage laser');
-export const disengageLasers = createAction('[computer] disengage laser');
-export const plotCourseLEO = createAction('[computer] plot course to LEO');
-export const plotCourseLunaOrbit = createAction('[computer] plot course to Luna orbit');
-export const plotCourseAsteroidBelt = createAction('[computer] plot course to the asteroid belt');
-
