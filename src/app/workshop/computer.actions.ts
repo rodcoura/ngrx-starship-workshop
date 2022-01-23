@@ -23,6 +23,10 @@ export class ComputerAction {
     addParam(key: string, value:string | number | boolean | undefined) {
         this.parameters[key] = value; 
     }
+
+    toDispatch() {
+        
+    }
 }
 
 /**
@@ -38,9 +42,9 @@ export const loadNavData = createAction('[computer] Load Navigation Data');
 export const loadNavDataSuccess = createAction('[computer] Load Navigation Data Success', props<{ navs: NavigationData[] }>());
 export const loadNavDataError = createAction('[computer] Load Navigation Data Error');
 
-export const engage = createAction('[computer] engage', props<{ keyID: string, [key: string]: string | number | boolean | undefined }>())
-export const disengage = createAction('[computer] disengage', props<{ keyID: string, [key: string]: string | number | boolean | undefined }>())
-export const plot = createAction('[computer] plot', props<{ keyID: string, [key: string]: string | number | boolean | undefined }>())
+export const engage = createAction('[computer] engage', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
+export const disengage = createAction('[computer] disengage', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
+export const plot = createAction('[computer] plot', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
 
 export const engageDockingClamp = createAction('[computer] engage docking clamp');
 export const disengageDockingClamp = createAction('[computer] disengage docking clamp');
