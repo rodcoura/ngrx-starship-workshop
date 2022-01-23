@@ -68,6 +68,62 @@ export const InitialComputerState: ComputerState = {
 
 export const computerReducerNEW = createReducer<ComputerState>(
     InitialComputerState,
+    on(act.echo, (state, action) => {
+        return {
+            ...state,
+            echoMessages: [
+                ...state.echoMessages,
+                ...action.messages
+            ]
+        };
+    }),
+    on(act.engage, (state, action) => {
+        if(action.keyID === 'laser' && action.param[action.keyID] == 10) {
+            action.param['engine'] = 0;
+            action.param['shield'] = 0;
+        }
+
+        if(action.keyID === 'engine' && action.param[action.keyID] == 10) {
+            action.param['laser'] = 0;
+            action.param['shield'] = 0;
+        }
+
+        if(action.keyID === 'shield' && action.param[action.keyID] == 10) {
+            action.param['laser'] = 0;
+            action.param['engine'] = 0;
+        }
+
+        if(action.keyID === 'tractorbeam' && action.param[action.keyID] == false) {
+            action.param['hasSatellite'] = false;
+        }
+
+        return {
+            ...state,
+            ...action.param
+        };
+    }),
+    on(act.disengage, (state, action) => {
+        return {
+            ...state,
+            ...action.param
+        };
+    }),
+    on(act.plot, (state, action) => {
+        action.param['locationPlace'] = action.param[action.keyID];
+
+        if(action.param[action.keyID] === 'AstreroidBelt') {
+            action.param['locationPlace'] = undefined;
+        }
+
+        if(action.param[action.keyID] === 'LunaOrbit') {
+            action.param['hasSatellite'] = true;
+        }
+
+        return {
+            ...state,
+            ...action.param
+        };
+    }),
 );
 
 export const computerReducer = createReducer<ComputerState>(

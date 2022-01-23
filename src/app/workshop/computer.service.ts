@@ -44,8 +44,8 @@ export class ComputerService {
             directive.adjectivalPhrase
         ].filter(a => a);
 
-        console.warn(`[computer] ${directiveT.join(' ')}`);
-        console.log(this.parseDirectiveToActionNEW(directive).toString());
+        //console.warn(`[computer] ${directiveT.join(' ')}`);
+        //console.log(this.parseDirectiveToActionNEW(directive).toString());
 
         return `[computer] ${directiveT.join(' ')}`;
     }
@@ -64,8 +64,8 @@ export class ComputerService {
 
         //Parse possible adjectivalPhrase value
         switch (directive.adjectivalPhrase) {
-            case 'to Luna orbit': paramValue = 'AsteroidBelt'; break;
-            case 'to the asteroid belt': paramValue = 'LunaOrbit'; break;
+            case 'to Luna orbit': paramValue = 'LunaOrbit'; break;
+            case 'to the asteroid belt': paramValue = 'AsteroidBelt'; break;
             case 'to LEO': paramValue = 'LEO'; break;
             default: break;
         }

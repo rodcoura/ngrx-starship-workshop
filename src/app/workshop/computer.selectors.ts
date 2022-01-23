@@ -18,6 +18,13 @@ export const selectViewscreen = createSelector(
     (state: ComputerState) => {
         const location = state.locations.find(a => a.location == state.locationPlace);
 
+        console.warn('location', state.locationPlace)
+        console.warn('course', state.course?.location)
+        console.warn('satellite correct', state.hasSatellite || state.tractorbeam)
+        console.warn('satellite Attempt I', state.locationPlace === 'LunaOrbit' || state.tractorbeam)
+        console.warn('satellite Attempt II', state.locationPlace === 'LunaOrbit' || state.course?.location !== 'AsteroidBelt' || state.tractorbeam)
+        console.log('interaction')
+        
         const view: ViewscreenState = {
             location: state.locationPlace,
             course: state.course?.location,
