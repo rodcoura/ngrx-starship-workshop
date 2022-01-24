@@ -7,7 +7,6 @@
  */
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
-import { SolarSystemLocation } from "../challenge.service";
 import { ComputerState } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
@@ -16,15 +15,15 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        const location = state.locations.find(a => a.location == state.locationPlace);
+        const location = state.locations.find(a => a.location == state.location);
 
-        const showLeftImageCases = state.hasSatellite || state.tractorbeam || state.locationPlace == 'AsteroidBelt';
-        const showCenterImageCases = (state.locationPlace == 'AsteroidBelt' && (state.laser == 5 || state.shields == 10));
+        const showLeftImageCases = state.hasSatellite || state.tractorbeam || (state.location == 'AsteroidBelt');
+        const showCenterImageCases = state.location == 'AsteroidBelt' && (state.laser >= 5 || state.shields == 10);
         //const showCenterImageCases = (location?.location == 'AsteroidBelt' && !state.asteroidInRange);
 
         const view: ViewscreenState = {
-            location: state.locationPlace,
-            course: state.course,
+            location: state.location,
+            course: state.location,
             leftImage: showLeftImageCases ? location?.leftImage : undefined,
             centerImage: showCenterImageCases ? '/assets/real_explode.gif' : location?.centerImage,
             rightImage: location?.rightImage,

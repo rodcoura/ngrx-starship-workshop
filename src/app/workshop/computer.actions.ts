@@ -12,17 +12,11 @@ export class ComputerAction {
     keyID: string;
     parameters: { [key: string]: string | number | boolean | undefined }
 
-    /**
-     *
-     */
-    constructor(action: string, keyID: string) {
+    constructor(action: string, keyID: string, paramValue: any) {
         this.action = action;
         this.keyID = keyID;
-        this.parameters = {};
-    }
-
-    addParam(key: string, value: string | number | boolean | undefined) {
-        this.parameters[key] = value;
+        this.parameters = { };
+        this.parameters[keyID] = paramValue;
     }
 
     toDispatchParameters() {

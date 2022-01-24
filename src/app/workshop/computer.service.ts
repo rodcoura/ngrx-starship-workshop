@@ -37,8 +37,13 @@ export class ComputerService {
     }
 
     private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {
-        const paramKey: string = directive.directObject.split(' ')[0];
+        let paramKey: string = '';
         let paramValue: number | boolean | SolarSystemLocation | undefined;
+
+        switch (directive.directObject){
+            case 'course' : paramKey = 'location'; break;
+            default: paramKey = directive.directObject.split(' ')[0]; break;
+        }
 
         //Parse possible adverb value
         switch (directive.adverb) {
@@ -56,13 +61,9 @@ export class ComputerService {
             default: break;
         }
 
-        const actionFinale = new ComputerAction(directive.verb, paramKey);
+        const action = new ComputerAction(directive.verb, paramKey, paramValue);
 
-        if(paramKey) {
-            actionFinale.addParam(paramKey, paramValue);
-        }
-
-        return actionFinale;
+        return action;
     }
 
     private directiveToComputerMessage(d: IComputerDirective): string{

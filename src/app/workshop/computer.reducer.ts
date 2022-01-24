@@ -45,8 +45,8 @@ export interface ComputerState {
      */
     laser: number,
     locations: NavigationData[],
-    locationPlace?: SolarSystemLocation,
-    course?: SolarSystemLocation,
+    location?: SolarSystemLocation,
+    // course?: SolarSystemLocation,
     docking: boolean,
     tractorbeam: boolean,
     hasSatellite: boolean,
@@ -55,7 +55,7 @@ export interface ComputerState {
 
 export const InitialComputerState: ComputerState = {
     echoMessages: [],
-    locationPlace: 'LEO',
+    location: 'LEO',
     shields: 0,
     engines: 0,
     laser: 0,
@@ -98,7 +98,7 @@ export const computerReducer = createReducer<ComputerState>(
 
         if (action.keyID === 'engines') {
             if(action.param[action.keyID] == 1) {
-                params.locationPlace = state.course;
+                // params.currentLocation = state.course;
             }
 
             if(action.param[action.keyID] == 10) {
@@ -126,10 +126,9 @@ export const computerReducer = createReducer<ComputerState>(
         }
 
         if (action.keyID === 'engines') {
-            params.locationPlace = state.course;
-            params.course = undefined;
+            // params.currentLocation = state.course;
+            // params.course = undefined;
             params.engines = 0;
-            console.log(0);
         }
 
         return {
@@ -141,14 +140,14 @@ export const computerReducer = createReducer<ComputerState>(
     on(act.plot, (state, action) => {
         let params: Partial<ComputerState> = {};
 
-        params.locationPlace = action.param.course;
+        params.location = action.param.location;
 
-        if (action.param.course === 'AsteroidBelt') {
+        if (action.param.location === 'AsteroidBelt') {
             params.hasSatellite = false;
             //params.asteroidInRange = true;
         }
 
-        if (action.param.course === 'LunaOrbit') {
+        if (action.param.location === 'LunaOrbit') {
             params.hasSatellite = true;
         }
 
