@@ -5,6 +5,7 @@
  */
 import { createAction, props } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
+import { ComputerState } from "./computer.reducer";
 
 export class ComputerAction {
     action: string;
@@ -20,8 +21,8 @@ export class ComputerAction {
         this.parameters = {};
     }
 
-    addParam(key: string, value:string | number | boolean | undefined) {
-        this.parameters[key] = value; 
+    addParam(key: string, value: string | number | boolean | undefined) {
+        this.parameters[key] = value;
     }
 
     toDispatchParameters() {
@@ -45,6 +46,6 @@ export const loadNavData = createAction('[computer] Load Navigation Data');
 export const loadNavDataSuccess = createAction('[computer] Load Navigation Data Success', props<{ navs: NavigationData[] }>());
 export const loadNavDataError = createAction('[computer] Load Navigation Data Error');
 
-export const engage = createAction('[computer] engage', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
-export const disengage = createAction('[computer] disengage', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
-export const plot = createAction('[computer] plot', props<{ keyID: string, param : { [key: string]: string | number | boolean | undefined }}>())
+export const engage = createAction('[computer] engage', props<{ keyID: string, param: Partial<ComputerState> }>())
+export const disengage = createAction('[computer] disengage', props<{ keyID: string, param: Partial<ComputerState> }>())
+export const plot = createAction('[computer] plot', props<{ keyID: string, param: Partial<ComputerState> }>())

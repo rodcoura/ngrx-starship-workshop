@@ -17,13 +17,16 @@ export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
         const location = state.locations.find(a => a.location == state.locationPlace);
-        const course = state.locations.find(a => a.location == state.course);
+
+        const showLeftImageCases = state.hasSatellite || state.tractorbeam || state.locationPlace == 'AsteroidBelt';
+        const showCenterImageCases = (state.locationPlace == 'AsteroidBelt' && (state.laser == 5 || state.shields == 10));
+        //const showCenterImageCases = (location?.location == 'AsteroidBelt' && !state.asteroidInRange);
 
         const view: ViewscreenState = {
             location: state.locationPlace,
             course: state.course,
-            leftImage: (state.hasSatellite || state.tractorbeam) ? location?.leftImage : undefined,
-            centerImage: (location?.location == 'AsteroidBelt' && !state.asteroidInRange) ? undefined : location?.centerImage,
+            leftImage: showLeftImageCases ? location?.leftImage : undefined,
+            centerImage: showCenterImageCases ? '/assets/real_explode.gif' : location?.centerImage,
             rightImage: location?.rightImage,
             laser: state.laser > 0,
             tractor: state.tractorbeam,
