@@ -17,8 +17,9 @@ export const selectViewscreen = createSelector(
     (state: ComputerState) => {
         const location = state.locations.find(a => a.location == (state.location ?? state.course));
 
-        const showLeftImage = state.hasSatellite || state.tractorbeam || state.location == 'AsteroidBelt';
-        const asteroidExploded = state.location == 'AsteroidBelt' && state.shields == 10;
+        const showLeftImage = state.hasSatellite || (state.location && (state.tractorbeam || state.location == 'AsteroidBelt'));
+        const showCenterImage = state.location && !(state.location == 'AsteroidBelt' && state.shields == 10);
+        const showRightImage = !!state.location;
         const asteroidExploding = state.location == 'AsteroidBelt' && state.laser >= 5;
         //const showCenterImage = (location?.location == 'AsteroidBelt' && !state.asteroidInRange);
 
@@ -26,8 +27,8 @@ export const selectViewscreen = createSelector(
             location: state.location,
             course: state.course,
             leftImage: showLeftImage ? location?.leftImage : undefined,
-            centerImage: asteroidExploding ? '/assets/real_explode.gif' : asteroidExploded ? undefined : location?.centerImage,
-            rightImage: location?.rightImage,
+            centerImage: asteroidExploding ? '/assets/real_explode.gif' : showCenterImage ? location?.centerImage : undefined,
+            rightImage: showRightImage ? location?.rightImage : undefined,
             laser: state.laser > 0,
             tractor: state.tractorbeam,
         };
