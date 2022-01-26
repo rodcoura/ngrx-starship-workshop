@@ -45,7 +45,7 @@ export interface ComputerState {
      */
     laser: number,
     locations: NavigationData[],
-    locationPlace?: SolarSystemLocation,
+    location?: SolarSystemLocation,
     course?: SolarSystemLocation,
     docking: boolean,
     tractorbeam: boolean,
@@ -55,7 +55,7 @@ export interface ComputerState {
 
 export const InitialComputerState: ComputerState = {
     echoMessages: [],
-    locationPlace: 'LEO',
+    location: 'LEO',
     shields: 0,
     engines: 0,
     laser: 0,
@@ -98,7 +98,7 @@ export const computerReducer = createReducer<ComputerState>(
 
         if (action.keyID === 'engines') {
             if(action.param[action.keyID] == 1) {
-                params.locationPlace = state.course;
+                params.location = state.course;
             }
 
             if(action.param[action.keyID] == 10) {
@@ -126,7 +126,7 @@ export const computerReducer = createReducer<ComputerState>(
         }
 
         if (action.keyID === 'engines') {
-            params.locationPlace = state.course;
+            params.location = state.course;
             params.course = undefined;
             params.engines = 0;
             console.log(0);
@@ -141,7 +141,7 @@ export const computerReducer = createReducer<ComputerState>(
     on(act.plot, (state, action) => {
         let params: Partial<ComputerState> = {};
 
-        params.locationPlace = action.param.course;
+        params.location = action.param.course;
 
         if (action.param.course === 'AsteroidBelt') {
             params.hasSatellite = false;
