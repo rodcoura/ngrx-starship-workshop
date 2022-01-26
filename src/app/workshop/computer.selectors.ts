@@ -15,12 +15,12 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        const location = state.locations.find(a => a.location == state.location);
+        const location = state.locations.find(a => a.location == (state.location ?? state.course));
 
         const showLeftImage = state.hasSatellite || state.tractorbeam || state.location == 'AsteroidBelt';
         const asteroidExploded = state.location == 'AsteroidBelt' && state.shields == 10;
         const asteroidExploding = state.location == 'AsteroidBelt' && state.laser >= 5;
-        //const showCenterImageCases = (location?.location == 'AsteroidBelt' && !state.asteroidInRange);
+        //const showCenterImage = (location?.location == 'AsteroidBelt' && !state.asteroidInRange);
 
         const view: ViewscreenState = {
             location: state.location,

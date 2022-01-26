@@ -84,78 +84,87 @@ export const computerReducer = createReducer<ComputerState>(
         };
     }),
     on(act.engage, (state, action) => {
-        let params: Partial<ComputerState> = {};
+        let newState: Partial<ComputerState> = {};
 
         if (action.keyID === 'laser') {
             // if (action.param[action.keyID] == 5)
-            //     params.asteroidInRange = false;
+            //     newState.asteroidInRange = false;
 
             if (action.param[action.keyID] == 10) {
-                params.engines = 0;
-                params.shields = 0;
+                newState.engines = 0;
+                newState.shields = 0;
             }
         }
 
         if (action.keyID === 'engines') {
-            if(action.param[action.keyID] == 1) {
-                params.location = state.course;
-            }
 
-            if(action.param[action.keyID] == 10) {
-                params.laser = 0;
-                params.shields = 0;
+            if(action.param[action.keyID] == 5) {
+                if (state.course == "AsteroidBelt") {
+                    newState.location = state.course;
+                    newState.course = undefined;
+                }
+            }
+            else if (action.param[action.keyID] == 10) {
+                newState.laser = 0;
+                newState.shields = 0;
+
+                if (state.course == "LEO") {
+                    newState.location = state.course;
+                    newState.course = undefined;
+                }
             }
         }
 
         if (action.keyID === 'shields' && action.param[action.keyID] == 10) {
-            params.laser = 0;
-            params.engines = 0;
+            newState.laser = 0;
+            newState.engines = 0;
         }
 
         return {
             ...state,
             ...action.param,
-            ...params
+            ...newState
         };
     }),
     on(act.disengage, (state, action) => {
-        let params: Partial<ComputerState> = {};
+        let newState: Partial<ComputerState> = {};
 
         if (action.keyID === 'tractorbeam') {
-            params.hasSatellite = false;
+            newState.hasSatellite = false;
         }
 
         if (action.keyID === 'engines') {
-            params.location = state.course;
-            params.course = undefined;
-            params.engines = 0;
-            console.log(0);
+            if (state.course) {
+                newState.location = state.course;
+                newState.course = undefined;
+            }
+            newState.engines = 0;
         }
 
         return {
             ...state,
             ...action.param,
-            ...params
+            ...newState
         };
     }),
     on(act.plot, (state, action) => {
-        let params: Partial<ComputerState> = {};
+        let newState: Partial<ComputerState> = {};
 
-        params.location = action.param.course;
+        newState.location = undefined;
 
         if (action.param.course === 'AsteroidBelt') {
-            params.hasSatellite = false;
-            //params.asteroidInRange = true;
+            newState.hasSatellite = false;
+            //newState.asteroidInRange = true;
         }
 
         if (action.param.course === 'LunaOrbit') {
-            params.hasSatellite = true;
+            newState.hasSatellite = true;
         }
 
         return {
             ...state,
             ...action.param,
-            ...params
+            ...newState
         };
     }),
 );
