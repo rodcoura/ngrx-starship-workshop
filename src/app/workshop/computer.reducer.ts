@@ -4,7 +4,6 @@
  * all main computer logic should go in this file
  */
 import { createReducer, on } from "@ngrx/store";
-import { SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
 import * as act from "./computer.actions";
 
@@ -93,30 +92,42 @@ export const computerReducer = createReducer<ComputerState>(
 
         const splitNavigation = state.courseLocation.split('|');
 
-        if (action.param.laser == 10) {
+        if (action.keyID === 'laser') {
             newState.engines = 0;
-            newState.shields = 0;
+            if (action.param.laser == 10) {
+                newState.shields = 0;
+            }
         }
 
         if (action.keyID === 'engines') {
 
-            if (action.param.engines == 5) {
-                if (splitNavigation[0] == "AsteroidBelt") {
-                    newState.courseLocation = `|${splitNavigation[0]}`;
-                }
-            }
-            else if (action.param.engines == 10) {
-                newState.laser = 0;
-                newState.shields = 0;
+            switch (action.param.engines) {
+                case 1:
+                    newState.docking = false;
+                    break;
+                case 5:
+                    newState.shields = 5;
+                    if (splitNavigation[0] == "AsteroidBelt") {
+                        newState.courseLocation = `|${splitNavigation[0]}`;
+                    }
+                    break;
+                case 10:
+                    newState.laser = 0;
+                    newState.shields = 0;
 
-                if (splitNavigation[0] == "LEO") {
-                    newState.courseLocation = `|${splitNavigation[0]}`;
-                }
+                    if (splitNavigation[0] == "LEO") {
+                        newState.courseLocation = `|${splitNavigation[0]}`;
+                    }
+                    break;
             }
         }
 
         if (action.param.shields == 10) {
             newState.laser = 0;
+            newState.engines = 0;
+        }
+
+        if (action.keyID === 'docking') {
             newState.engines = 0;
         }
 
