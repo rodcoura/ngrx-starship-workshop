@@ -45,8 +45,7 @@ export interface ComputerState {
      */
     laser: number,
     locations: NavigationData[],
-    location?: SolarSystemLocation,
-    course?: SolarSystemLocation,
+    courseLocation: string,
     docking: boolean,
     tractorbeam: boolean,
     hasSatellite: boolean,
@@ -55,7 +54,7 @@ export interface ComputerState {
 
 export const InitialComputerState: ComputerState = {
     echoMessages: [],
-    location: 'LEO',
+    courseLocation: '|LEO',
     shields: 0,
     engines: 0,
     laser: 0,
@@ -83,39 +82,40 @@ export const computerReducer = createReducer<ComputerState>(
             locations: action.navs
         };
     }),
+    on(act.loadNavDataError, (state, action) => {
+        return {
+            ...state,
+            locations: []
+        };
+    }),
     on(act.engage, (state, action) => {
         let newState: Partial<ComputerState> = {};
 
-        if (action.keyID === 'laser') {
-            // if (action.param[action.keyID] == 5)
-            //     newState.asteroidInRange = false;
+        const splitNavigation = state.courseLocation.split('|');
 
-            if (action.param[action.keyID] == 10) {
-                newState.engines = 0;
-                newState.shields = 0;
-            }
+        if (action.param.laser == 10) {
+            newState.engines = 0;
+            newState.shields = 0;
         }
 
         if (action.keyID === 'engines') {
 
-            if(action.param[action.keyID] == 5) {
-                if (state.course == "AsteroidBelt") {
-                    newState.location = state.course;
-                    newState.course = undefined;
+            if (action.param.engines == 5) {
+                if (splitNavigation[0] == "AsteroidBelt") {
+                    newState.courseLocation = `|${splitNavigation[0]}`;
                 }
             }
-            else if (action.param[action.keyID] == 10) {
+            else if (action.param.engines == 10) {
                 newState.laser = 0;
                 newState.shields = 0;
 
-                if (state.course == "LEO") {
-                    newState.location = state.course;
-                    newState.course = undefined;
+                if (splitNavigation[0] == "LEO") {
+                    newState.courseLocation = `|${splitNavigation[0]}`;
                 }
             }
         }
 
-        if (action.keyID === 'shields' && action.param[action.keyID] == 10) {
+        if (action.param.shields == 10) {
             newState.laser = 0;
             newState.engines = 0;
         }
@@ -129,14 +129,15 @@ export const computerReducer = createReducer<ComputerState>(
     on(act.disengage, (state, action) => {
         let newState: Partial<ComputerState> = {};
 
-        if (action.keyID === 'tractorbeam') {
+        const splitNavigation = state.courseLocation.split('|');
+
+        if (action.param.tractorbeam === false) {
             newState.hasSatellite = false;
         }
 
         if (action.keyID === 'engines') {
-            if (state.course) {
-                newState.location = state.course;
-                newState.course = undefined;
+            if (splitNavigation[0]) {
+                newState.courseLocation = `|${splitNavigation[0]}`;
             }
             newState.engines = 0;
         }
@@ -150,14 +151,14 @@ export const computerReducer = createReducer<ComputerState>(
     on(act.plot, (state, action) => {
         let newState: Partial<ComputerState> = {};
 
-        newState.location = undefined;
+        newState.courseLocation = `${action.param.courseLocation}|`;
 
-        if (action.param.course === 'AsteroidBelt') {
+        if (action.param.courseLocation === 'AsteroidBelt') {
             newState.hasSatellite = false;
             //newState.asteroidInRange = true;
         }
 
-        if (action.param.course === 'LunaOrbit') {
+        if (action.param.courseLocation === 'LunaOrbit') {
             newState.hasSatellite = true;
         }
 

@@ -7,6 +7,7 @@
  */
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
+import { SolarSystemLocation } from "../challenge.service";
 import { ComputerState } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
@@ -15,17 +16,19 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        const location = state.locations.find(a => a.location == (state.location ?? state.course));
+        const splitNavigation = state.courseLocation.split('|');
+        const stateCourse = (splitNavigation[0] ? splitNavigation[0] : undefined) as SolarSystemLocation | undefined;
+        const stateLocation = (splitNavigation[1] ? splitNavigation[1] : undefined) as SolarSystemLocation | undefined;
+        const location = state.locations.find(a => a.location == (stateLocation ?? stateCourse));
 
-        const showLeftImage = state.hasSatellite || (state.location && (state.tractorbeam || state.location == 'AsteroidBelt'));
-        const showCenterImage = state.location && !(state.location == 'AsteroidBelt' && state.shields == 10);
-        const showRightImage = !!state.location;
-        const asteroidExploding = state.location == 'AsteroidBelt' && state.laser >= 5;
-        //const showCenterImage = (location?.location == 'AsteroidBelt' && !state.asteroidInRange);
+        const showLeftImage = state.hasSatellite || (stateLocation && (state.tractorbeam || stateLocation == 'AsteroidBelt'));
+        const showCenterImage = stateLocation && !(stateLocation == 'AsteroidBelt' && state.shields == 10);
+        const showRightImage = !!stateLocation;
+        const asteroidExploding = stateLocation == 'AsteroidBelt' && state.laser >= 5;
 
         const view: ViewscreenState = {
-            location: state.location,
-            course: state.course,
+            location: stateLocation,
+            course: stateCourse,
             leftImage: showLeftImage ? location?.leftImage : undefined,
             centerImage: asteroidExploding ? '/assets/real_explode.gif' : showCenterImage ? location?.centerImage : undefined,
             rightImage: showRightImage ? location?.rightImage : undefined,

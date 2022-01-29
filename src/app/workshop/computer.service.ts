@@ -27,17 +27,39 @@ export class ComputerService {
      */
     public InterpretDirectives(directives: IComputerDirective[]) {
         let messages : string[] = [];
-        directives.forEach(directive => {
-            const parsedDirective = this.parseDirectiveToAction(directive);
+        let parsedDirectives : ComputerAction[] = directives.map(directive => {
             messages.push(this.directiveToComputerMessage(directive));
-            this.store.dispatch({ type: `[computer] ${parsedDirective.action}`, ...parsedDirective.toDispatchParameters() });
+            return this.parseDirectiveToAction(directive);
         });
+
+        // if(parsedDirectives.every(a => a.action == parsedDirectives[0].action)) {
+        //     let actionParams : any = {
+        //         keyIDs: [],
+        //         params: {}
+        //     };
+            
+        //     parsedDirectives.forEach(parsedDirective => {
+        //         const computedParam = parsedDirective.toDispatchParameters();
+        //         actionParams.keyIDs.push(computedParam.keyID);
+        //         actionParams.params = {
+        //             ...actionParams.params,
+        //             ...computedParam.param
+        //         }
+        //     });
+        //     console.log(actionParams);
+        //     this.store.dispatch({ type: `[computer] ${parsedDirectives[0].action}`, ...actionParams });
+        // } else {
+            parsedDirectives.forEach(parsedDirective => {
+                this.store.dispatch({ type: `[computer] ${parsedDirective.action}`, ...parsedDirective.toDispatchParameters() });
+            })  
+        // }
+
         this.store.dispatch(act.echo({ messages }));
         messages = [];
     }
 
     private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {
-        const paramKey: string = directive.directObject.split(' ')[0];
+        const paramKey: string = directive.directObject.split(' ')[0].replace('course', 'courseLocation');
         let paramValue: number | boolean | SolarSystemLocation | undefined;
 
         //Parse possible adverb value
