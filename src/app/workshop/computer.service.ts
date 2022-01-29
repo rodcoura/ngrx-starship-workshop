@@ -28,7 +28,9 @@ export class ComputerService {
     public InterpretDirectives(directives: IComputerDirective[]) {
         let messages : string[] = [];
         let parsedDirectives : ComputerAction[] = directives
-            .filter(d => directives.length == 1 || !this.unusedActions.some(u => JSON.stringify(u) == JSON.stringify(d)))
+            .filter(d => 
+                directives.length == 1 || !this.unusedActions.some(u => JSON.stringify(u) == JSON.stringify(d))
+            )
             .map(directive => {
                 messages.push(this.directiveToComputerMessage(directive));
                 return this.parseDirectiveToAction(directive);
@@ -64,7 +66,8 @@ export class ComputerService {
     private unusedActions = [
         { verb: 'disengage', directObject: 'docking clamp' },
         { adverb: 'halfway', verb: 'engage', directObject: 'shields' },
-        { verb: 'disengage', directObject: 'engines' }
+        { verb: 'disengage', directObject: 'engines' },
+        { adverb: 'fully', verb: 'engage', directObject: 'engines' }
     ];
 
     private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {
