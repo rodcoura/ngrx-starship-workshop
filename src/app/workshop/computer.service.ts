@@ -66,6 +66,7 @@ export class ComputerService {
     private unusedActions = [
         { verb: 'disengage', directObject: 'docking clamp' },
         { adverb: 'halfway', verb: 'engage', directObject: 'shields' },
+        { adverb: 'halfway', verb: 'engage', directObject: 'engines' },
         { verb: 'disengage', directObject: 'engines' },
         { adverb: 'fully', verb: 'engage', directObject: 'engines' }
     ];

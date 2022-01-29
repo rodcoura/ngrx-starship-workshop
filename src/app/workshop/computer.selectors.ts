@@ -22,7 +22,7 @@ export const selectViewscreen = createSelector(
         const location = state.locations.find(a => a.location == (stateLocation ?? stateCourse));
 
         const showLeftImage = state.hasSatellite || (stateLocation && (state.tractorbeam || stateLocation == 'AsteroidBelt'));
-        const showCenterImage = stateLocation && !(stateLocation == 'AsteroidBelt' && state.shields == 10);
+        const showCenterImage = (stateLocation || stateCourse == 'AsteroidBelt') && !(stateLocation == 'AsteroidBelt' && state.shields == 10);
         const showRightImage = !!stateLocation;
         const asteroidExploding = stateLocation == 'AsteroidBelt' && state.laser >= 5;
 

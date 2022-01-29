@@ -95,29 +95,27 @@ export const computerReducer = createReducer<ComputerState>(
         if (action.keyID === 'laser' || action.keyID === 'docking') {
             newState.engines = 0;
 
-            if (action.param.laser == 10) {
+            if (action.param.laser == 5)
+                newState.courseLocation = `|${state.courseLocation.split('|')[0]}`;
+            else if (action.param.laser == 10)
                 newState.shields = 0;
-            }
         }
 
         if (action.keyID === 'engines') {
             newState.docking = false;
 
-            switch (action.param.engines) {
-                case 5:
-                    newState.shields = 5;
-                    if (splitNavigation[0] == "AsteroidBelt") {
-                        newState.courseLocation = `|${splitNavigation[0]}`;
-                    }
-                    break;
-                case 10:
-                    newState.laser = 0;
-                    newState.shields = 0;
+            if (action.param.engines == 5) {
+                newState.shields = 5;
+                if (splitNavigation[0] == "AsteroidBelt") {
+                    newState.courseLocation = `|${splitNavigation[0]}`;
+                }
+            } else if (action.param.engines == 10) {
+                newState.laser = 0;
+                newState.shields = 0;
 
-                    if (splitNavigation[0] == "LEO") {
-                        newState.courseLocation = `|${splitNavigation[0]}`;
-                    }
-                    break;
+                if (splitNavigation[0] == "LEO") {
+                    newState.courseLocation = `|${splitNavigation[0]}`;
+                }
             }
         }
 
@@ -162,6 +160,8 @@ export const computerReducer = createReducer<ComputerState>(
         if (action.param.courseLocation === 'AsteroidBelt') {
             newState.hasSatellite = false;
             //newState.asteroidInRange = true;
+            newState.shields = 5;
+            newState.engines = 5;
         }
 
         if (action.param.courseLocation === 'LunaOrbit') {
