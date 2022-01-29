@@ -70,8 +70,8 @@ export const computerReducer = createReducer<ComputerState>(
         return {
             ...state,
             echoMessages: [
+                ...action.messages,
                 ...state.echoMessages,
-                ...action.messages
             ]
         };
     }),
