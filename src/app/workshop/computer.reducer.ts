@@ -94,8 +94,21 @@ export const computerReducer = createReducer<ComputerState>(
             newState.shields = 0;
         }
 
-        if (action.keyID === 'engines') {
+        //Exploding!
+        if(action.param.laser === 5) {
+            newState.locations = state.locations?.map(a => {
+                if(a.location === 'AsteroidBelt')
+                    return <NavigationData>{
+                        location: a.location,
+                        leftImage: a.leftImage,
+                        centerImage: '/assets/real_explode.gif',
+                        rightImage: a.rightImage
+                    };
+                return a;
+            });
+        }
 
+        if (action.keyID === 'engines') {
             if (action.param.engines == 5) {
                 if (splitNavigation[0] == "AsteroidBelt") {
                     newState.courseLocation = `|${splitNavigation[0]}`;
@@ -114,6 +127,17 @@ export const computerReducer = createReducer<ComputerState>(
         if (action.param.shields == 10) {
             newState.laser = 0;
             newState.engines = 0;
+
+            newState.locations = state.locations?.map(a => {
+                if(a.location === 'AsteroidBelt')
+                    return <NavigationData>{
+                        location: a.location,
+                        leftImage: a.leftImage,
+                        centerImage: undefined,
+                        rightImage: a.rightImage
+                    };
+                return a;
+            });
         }
 
         return {
