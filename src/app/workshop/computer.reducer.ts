@@ -47,8 +47,6 @@ export interface ComputerState {
     courseLocation: string,
     docking: boolean,
     tractorbeam: boolean,
-    hasSatellite: boolean,
-    //asteroidInRange?: boolean,
 }
 
 export const InitialComputerState: ComputerState = {
@@ -60,8 +58,6 @@ export const InitialComputerState: ComputerState = {
     docking: true,
     tractorbeam: false,
     locations: [],
-    hasSatellite: true,
-    //asteroidInRange: false,
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -101,9 +97,23 @@ export const computerReducer = createReducer<ComputerState>(
                 newState.shields = 0;
         }
 
+        //Exploding!
+        if(action.param.laser === 5) {
+            newState.locations = state.locations?.map(a => {
+                if(a.location === 'AsteroidBelt')
+                    return <NavigationData>{
+                        location: a.location,
+                        leftImage: a.leftImage,
+                        centerImage: '/assets/real_explode.gif',
+                        rightImage: a.rightImage
+                    };
+                return a;
+            });
+        }
+
         if (action.keyID === 'engines') {
             newState.docking = false;
-
+        
             if (action.param.engines == 5) {
                 newState.shields = 5;
                 if (splitNavigation[0] == "AsteroidBelt") {
@@ -122,6 +132,17 @@ export const computerReducer = createReducer<ComputerState>(
         if (action.param.shields == 10) {
             newState.laser = 0;
             newState.engines = 0;
+
+            newState.locations = state.locations?.map(a => {
+                if(a.location === 'AsteroidBelt')
+                    return <NavigationData>{
+                        location: a.location,
+                        leftImage: a.leftImage,
+                        centerImage: undefined,
+                        rightImage: a.rightImage
+                    };
+                return a;
+            });
         }
 
         return {
@@ -136,7 +157,14 @@ export const computerReducer = createReducer<ComputerState>(
         const splitNavigation = state.courseLocation.split('|');
 
         if (action.param.tractorbeam === false) {
-            newState.hasSatellite = false;
+            newState.locations = state.locations?.map(a => {
+                if(a.location === splitNavigation[1])
+                    return <NavigationData>{
+                        location: a.location,
+                        centerImage: a.centerImage
+                    };
+                return a;
+            });
         }
 
         if (action.keyID === 'engines') {
@@ -158,15 +186,12 @@ export const computerReducer = createReducer<ComputerState>(
         newState.courseLocation = `${action.param.courseLocation}|`;
 
         if (action.param.courseLocation === 'AsteroidBelt') {
-            newState.hasSatellite = false;
-            //newState.asteroidInRange = true;
             newState.shields = 5;
             newState.engines = 5;
         }
 
         if (action.param.courseLocation === 'LunaOrbit') {
             newState.engines = 10;
-            newState.hasSatellite = true;
         }
 
         return {
