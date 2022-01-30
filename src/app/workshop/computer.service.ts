@@ -68,7 +68,8 @@ export class ComputerService {
         { adverb: 'halfway', verb: 'engage', directObject: 'shields' },
         { adverb: 'halfway', verb: 'engage', directObject: 'engines' },
         { verb: 'disengage', directObject: 'engines' },
-        { adverb: 'fully', verb: 'engage', directObject: 'engines' }
+        { adverb: 'fully', verb: 'engage', directObject: 'engines' },
+        { verb: 'disengage', directObject: 'shields' }
     ];
 
     private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {

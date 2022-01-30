@@ -185,13 +185,23 @@ export const computerReducer = createReducer<ComputerState>(
 
         newState.courseLocation = `${action.param.courseLocation}|`;
 
+        switch (action.param.courseLocation) {
+            case 'AsteroidBelt':
+                newState.shields = 5;
+                newState.engines = 5;
+                break;
+            case 'LunaOrbit':
+                newState.engines = 10;
+                break;
+            case 'LEO':
+                newState.shields = 0;
+                break;
+        }
+
         if (action.param.courseLocation === 'AsteroidBelt') {
-            newState.shields = 5;
-            newState.engines = 5;
         }
 
         if (action.param.courseLocation === 'LunaOrbit') {
-            newState.engines = 10;
         }
 
         return {
