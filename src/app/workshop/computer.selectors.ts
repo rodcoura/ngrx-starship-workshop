@@ -21,17 +21,15 @@ export const selectViewscreen = createSelector(
         const stateLocation = (splitNavigation[1] ? splitNavigation[1] : undefined) as SolarSystemLocation | undefined;
         const location = state.locations.find(a => a.location == (stateLocation ?? stateCourse));
 
-        const showLeftImage = state.hasSatellite || (stateLocation && (state.tractorbeam || stateLocation == 'AsteroidBelt'));
         const showCenterImage = stateLocation && !(stateLocation == 'AsteroidBelt' && state.shields == 10);
-        const showRightImage = !!stateLocation;
         const asteroidExploding = stateLocation == 'AsteroidBelt' && state.laser >= 5;
 
         const view: ViewscreenState = {
             location: stateLocation,
             course: stateCourse,
-            leftImage: showLeftImage ? location?.leftImage : undefined,
+            leftImage: location?.leftImage,
             centerImage: asteroidExploding ? '/assets/real_explode.gif' : showCenterImage ? location?.centerImage : undefined,
-            rightImage: showRightImage ? location?.rightImage : undefined,
+            rightImage: location?.rightImage,
             laser: state.laser > 0,
             tractor: state.tractorbeam,
         };

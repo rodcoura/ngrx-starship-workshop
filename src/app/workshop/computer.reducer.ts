@@ -48,8 +48,6 @@ export interface ComputerState {
     courseLocation: string,
     docking: boolean,
     tractorbeam: boolean,
-    hasSatellite: boolean,
-    //asteroidInRange?: boolean,
 }
 
 export const InitialComputerState: ComputerState = {
@@ -61,8 +59,6 @@ export const InitialComputerState: ComputerState = {
     docking: true,
     tractorbeam: false,
     locations: [],
-    hasSatellite: true,
-    //asteroidInRange: false,
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -132,7 +128,14 @@ export const computerReducer = createReducer<ComputerState>(
         const splitNavigation = state.courseLocation.split('|');
 
         if (action.param.tractorbeam === false) {
-            newState.hasSatellite = false;
+            newState.locations = state.locations?.map(a => {
+                if(a.location === splitNavigation[1])
+                    return <NavigationData>{
+                        location: a.location,
+                        centerImage: a.centerImage
+                    };
+                return a;
+            });
         }
 
         if (action.keyID === 'engines') {
@@ -152,15 +155,6 @@ export const computerReducer = createReducer<ComputerState>(
         let newState: Partial<ComputerState> = {};
 
         newState.courseLocation = `${action.param.courseLocation}|`;
-
-        if (action.param.courseLocation === 'AsteroidBelt') {
-            newState.hasSatellite = false;
-            //newState.asteroidInRange = true;
-        }
-
-        if (action.param.courseLocation === 'LunaOrbit') {
-            newState.hasSatellite = true;
-        }
 
         return {
             ...state,
