@@ -4,7 +4,6 @@
  * all main computer logic should go in this file
  */
 import { createReducer, on } from "@ngrx/store";
-import { SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
 import * as act from "./computer.actions";
 
@@ -67,8 +66,8 @@ export const computerReducer = createReducer<ComputerState>(
         return {
             ...state,
             echoMessages: [
+                ...action.messages,
                 ...state.echoMessages,
-                ...action.messages
             ]
         };
     }),
@@ -89,9 +88,13 @@ export const computerReducer = createReducer<ComputerState>(
 
         const splitNavigation = state.courseLocation.split('|');
 
-        if (action.param.laser == 10) {
+        if (action.keyID === 'laser' || action.keyID === 'docking') {
             newState.engines = 0;
-            newState.shields = 0;
+
+            if (action.param.laser == 5)
+                newState.courseLocation = `|${state.courseLocation.split('|')[0]}`;
+            else if (action.param.laser == 10)
+                newState.shields = 0;
         }
 
         //Exploding!
@@ -109,12 +112,14 @@ export const computerReducer = createReducer<ComputerState>(
         }
 
         if (action.keyID === 'engines') {
+            newState.docking = false;
+        
             if (action.param.engines == 5) {
+                newState.shields = 5;
                 if (splitNavigation[0] == "AsteroidBelt") {
                     newState.courseLocation = `|${splitNavigation[0]}`;
                 }
-            }
-            else if (action.param.engines == 10) {
+            } else if (action.param.engines == 10) {
                 newState.laser = 0;
                 newState.shields = 0;
 
@@ -179,6 +184,25 @@ export const computerReducer = createReducer<ComputerState>(
         let newState: Partial<ComputerState> = {};
 
         newState.courseLocation = `${action.param.courseLocation}|`;
+
+        switch (action.param.courseLocation) {
+            case 'AsteroidBelt':
+                newState.shields = 5;
+                newState.engines = 5;
+                break;
+            case 'LunaOrbit':
+                newState.engines = 10;
+                break;
+            case 'LEO':
+                newState.shields = 0;
+                break;
+        }
+
+        if (action.param.courseLocation === 'AsteroidBelt') {
+        }
+
+        if (action.param.courseLocation === 'LunaOrbit') {
+        }
 
         return {
             ...state,

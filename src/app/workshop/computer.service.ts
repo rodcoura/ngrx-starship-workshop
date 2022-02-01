@@ -27,17 +27,22 @@ export class ComputerService {
      */
     public InterpretDirectives(directives: IComputerDirective[]) {
         let messages : string[] = [];
-        let parsedDirectives : ComputerAction[] = directives.map(directive => {
-            messages.push(this.directiveToComputerMessage(directive));
-            return this.parseDirectiveToAction(directive);
-        });
+        let parsedDirectives : ComputerAction[] = directives
+            .filter(d => 
+                directives.length == 1 || !this.unusedActions.some(u => JSON.stringify(u) == JSON.stringify(d))
+            )
+            .map(directive => {
+                messages.push(this.directiveToComputerMessage(directive));
+                return this.parseDirectiveToAction(directive);
+            }
+        );
 
         // if(parsedDirectives.every(a => a.action == parsedDirectives[0].action)) {
         //     let actionParams : any = {
         //         keyIDs: [],
         //         params: {}
         //     };
-            
+
         //     parsedDirectives.forEach(parsedDirective => {
         //         const computedParam = parsedDirective.toDispatchParameters();
         //         actionParams.keyIDs.push(computedParam.keyID);
@@ -57,6 +62,15 @@ export class ComputerService {
         this.store.dispatch(act.echo({ messages }));
         messages = [];
     }
+
+    private unusedActions = [
+        { verb: 'disengage', directObject: 'docking clamp' },
+        { adverb: 'halfway', verb: 'engage', directObject: 'shields' },
+        { adverb: 'halfway', verb: 'engage', directObject: 'engines' },
+        { verb: 'disengage', directObject: 'engines' },
+        { adverb: 'fully', verb: 'engage', directObject: 'engines' },
+        { verb: 'disengage', directObject: 'shields' }
+    ];
 
     private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {
         const paramKey: string = directive.directObject.split(' ')[0].replace('course', 'courseLocation');
