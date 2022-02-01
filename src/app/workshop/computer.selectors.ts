@@ -16,7 +16,6 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        // const splitNavigation = state.courseLocation.split('|');
         let currentLocation: SolarSystemLocation;
 
         if ((state.courseLocation & CourseLocation.AsteroidBelt) === CourseLocation.AsteroidBelt) {

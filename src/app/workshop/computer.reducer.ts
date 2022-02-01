@@ -99,11 +99,7 @@ export const computerReducer = createReducer<ComputerState>(
             newState.engines = 0;
 
             if (action.param.laser == 5) {
-                debugger
-                newState.courseLocation |= CourseLocation.InLocation;
-                // newState.courseLocation &= ~CourseLocation.OnCourse;
-                // 0011
-                // 0010
+                newState.courseLocation &= ~CourseLocation.OnCourse;
             }
             else if (action.param.laser == 10) {
                 newState.shields = 0;
@@ -131,7 +127,6 @@ export const computerReducer = createReducer<ComputerState>(
                 newState.shields = 5;
                 if ((state.courseLocation & CourseLocation.AsteroidBelt) === CourseLocation.AsteroidBelt) {
                     newState.courseLocation |= CourseLocation.InLocation;
-                    // newState.courseLocation = `|${splitNavigation[0]}`;
                 }
             } else if (action.param.engines == 10) {
                 newState.laser = 0;
@@ -139,7 +134,6 @@ export const computerReducer = createReducer<ComputerState>(
 
                 if ((state.courseLocation & CourseLocation.LEO) === CourseLocation.LEO) {
                     newState.courseLocation |= CourseLocation.InLocation;
-                    // newState.courseLocation = `|${splitNavigation[0]}`;
                 }
             }
         }
@@ -172,7 +166,6 @@ export const computerReducer = createReducer<ComputerState>(
 
         if (action.param.tractorbeam === false) {
             newState.locations = state.locations?.map(a => {
-                // if(a.location === splitNavigation[1])
                 if(a.location === 'LunaOrbit')
                     return <NavigationData>{
                         location: a.location,
@@ -185,7 +178,6 @@ export const computerReducer = createReducer<ComputerState>(
         if (action.keyID === 'engines') {
             if ((state.courseLocation & CourseLocation.OnCourse) === CourseLocation.OnCourse) {
                 newState.courseLocation |= CourseLocation.OnCourse;
-                // newState.courseLocation = `|${splitNavigation[0]}`;
             }
             newState.engines = 0;
         }
@@ -198,19 +190,19 @@ export const computerReducer = createReducer<ComputerState>(
     }),
     on(act.plot, (state, action) => {
         let newState: Partial<ComputerState> = {};
-
-        newState.courseLocation = action.param.courseLocation;
         if (action.param.courseLocation) {
-            if ((action.param.courseLocation & CourseLocation.AsteroidBelt) === CourseLocation.AsteroidBelt) {
+            if (action.param.courseLocation === CourseLocation.AsteroidBelt) {
                 newState.shields = 5;
                 newState.engines = 5;
             }
-            else if ((action.param.courseLocation & CourseLocation.LunaOrbit) === CourseLocation.LunaOrbit) {
+            else if (action.param.courseLocation === CourseLocation.LunaOrbit) {
                 newState.engines = 10;
             }
-            else if ((action.param.courseLocation & CourseLocation.LEO) === CourseLocation.LEO) {
+            else if (action.param.courseLocation === CourseLocation.LEO) {
                 newState.shields = 0;
             }
+            newState.courseLocation = action.param.courseLocation;
+            newState.courseLocation |= CourseLocation.OnCourse;
         }
 
         return {
