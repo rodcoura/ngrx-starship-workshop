@@ -8,7 +8,7 @@
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
 import { SolarSystemLocation } from "../challenge.service";
-import { ComputerState } from "./computer.reducer";
+import { ComputerState, ShipFeature } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
 // https://ngrx.io/guide/store/selectors
@@ -30,7 +30,7 @@ export const selectViewscreen = createSelector(
             centerImage: location?.centerImage,
             rightImage: location?.rightImage,
             laser: state.laser > 0,
-            tractor: state.tractorbeam,
+            tractor: (state.shipFeatures & ShipFeature.TractorOnline) === ShipFeature.TractorOnline,
         };
 
         return view;
@@ -61,14 +61,14 @@ export const selectLasers = createSelector(
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.docking;
+        return (state.shipFeatures & ShipFeature.DockingOnline) === ShipFeature.DockingOnline;
     }
 );
 
 export const selectTractorbeam = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.tractorbeam;
+        return (state.shipFeatures & ShipFeature.TractorOnline) === ShipFeature.TractorOnline;
     }
 );
 

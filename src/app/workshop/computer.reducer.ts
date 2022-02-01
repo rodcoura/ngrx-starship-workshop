@@ -7,6 +7,13 @@ import { createReducer, on } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
 import * as act from "./computer.actions";
 
+export enum ShipFeature {
+    TractorOnline = 1 << 0,
+    TractorOffline = 1 << 1,
+    DockingOnline = 1 << 2,
+    DockingOffline = 1 << 3,
+}
+
 /**
  * This is the "slice" that you need to fill out!
  * 
@@ -45,8 +52,7 @@ export interface ComputerState {
     laser: number,
     locations: NavigationData[],
     courseLocation: string,
-    docking: boolean,
-    tractorbeam: boolean,
+    shipFeatures: ShipFeature
 }
 
 export const InitialComputerState: ComputerState = {
@@ -55,8 +61,7 @@ export const InitialComputerState: ComputerState = {
     shields: 0,
     engines: 0,
     laser: 0,
-    docking: true,
-    tractorbeam: false,
+    shipFeatures: ShipFeature.DockingOnline | ShipFeature.TractorOffline,
     locations: [],
 }
 
@@ -87,6 +92,17 @@ export const computerReducer = createReducer<ComputerState>(
         let newState: Partial<ComputerState> = {};
 
         const splitNavigation = state.courseLocation.split('|');
+        newState.shipFeatures = state.shipFeatures;
+
+        if(action.keyID === 'docking') {
+            newState.shipFeatures |= ShipFeature.DockingOnline;
+            newState.shipFeatures &= ~ShipFeature.DockingOffline;
+        }
+
+        if(action.keyID === 'tractorbeam') {
+            newState.shipFeatures |= ShipFeature.TractorOnline;
+            newState.shipFeatures &= ~ShipFeature.TractorOffline;
+        }
 
         if (action.keyID === 'laser' || action.keyID === 'docking') {
             newState.engines = 0;
@@ -112,7 +128,8 @@ export const computerReducer = createReducer<ComputerState>(
         }
 
         if (action.keyID === 'engines') {
-            newState.docking = false;
+            newState.shipFeatures |= ShipFeature.DockingOffline;
+            newState.shipFeatures &= ~ShipFeature.DockingOnline;
         
             if (action.param.engines == 5) {
                 newState.shields = 5;
@@ -155,8 +172,17 @@ export const computerReducer = createReducer<ComputerState>(
         let newState: Partial<ComputerState> = {};
 
         const splitNavigation = state.courseLocation.split('|');
+        newState.shipFeatures = state.shipFeatures;
+        
+        if (action.keyID === 'docking') {
+            newState.shipFeatures |= ShipFeature.DockingOffline;
+            newState.shipFeatures &= ~ShipFeature.DockingOnline;
+        }
 
-        if (action.param.tractorbeam === false) {
+        if (action.keyID === 'tractorbeam') {
+            newState.shipFeatures |= ShipFeature.TractorOffline;
+            newState.shipFeatures &= ~ShipFeature.TractorOnline;
+
             newState.locations = state.locations?.map(a => {
                 if(a.location === splitNavigation[1])
                     return <NavigationData>{
@@ -196,12 +222,6 @@ export const computerReducer = createReducer<ComputerState>(
             case 'LEO':
                 newState.shields = 0;
                 break;
-        }
-
-        if (action.param.courseLocation === 'AsteroidBelt') {
-        }
-
-        if (action.param.courseLocation === 'LunaOrbit') {
         }
 
         return {
