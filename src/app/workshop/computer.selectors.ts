@@ -21,7 +21,7 @@ export const selectViewscreen = createSelector(
         const stateCourse = (splitNavigation[0] ? splitNavigation[0] : undefined) as SolarSystemLocation | undefined;
         const stateLocation = (splitNavigation[1] ? splitNavigation[1] : undefined) as SolarSystemLocation | undefined;
         
-        const location = state.locations.find(a => a.location == (stateLocation ?? stateCourse));
+        const location = state.locations;
 
         const view: ViewscreenState = {
             location: stateLocation,

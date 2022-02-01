@@ -34,8 +34,9 @@ export class ComputerService {
                 return this.parseDirectiveToAction(directive);
             });
 
-            parsedDirectives.forEach(parsedDirective => {
-            this.store.dispatch({ type: `[computer] ${parsedDirective.action}`, ...parsedDirective.toDispatchParameters() });
+        parsedDirectives.forEach(parsedDirective => {
+            if(!parsedDirective.action.includes('plot'))
+                this.store.dispatch({ type: `[computer] ${parsedDirective.action}`, ...parsedDirective.toDispatchParameters() });
         })
 
         this.store.dispatch(act.echo({ messages }));
@@ -65,9 +66,18 @@ export class ComputerService {
 
         //Parse possible adjectivalPhrase value
         switch (directive.adjectivalPhrase) {
-            case 'to Luna orbit': paramValue = 'LunaOrbit'; break;
-            case 'to the asteroid belt': paramValue = 'AsteroidBelt'; break;
-            case 'to LEO': paramValue = 'LEO'; break;
+            case 'to Luna orbit': 
+                this.store.dispatch({ type: `[computer] before plot`, course : 'LunaOrbit' });
+                paramValue = 'LunaOrbit'; 
+                break;
+            case 'to the asteroid belt': 
+                this.store.dispatch({ type: `[computer] before plot`, course : 'AsteroidBelt' });
+                paramValue = 'AsteroidBelt'; 
+                break;
+            case 'to LEO': 
+                this.store.dispatch({ type: `[computer] before plot`, course : 'LEO' });
+                paramValue = 'LEO'; 
+                break;
             default: break;
         }
 

@@ -50,7 +50,7 @@ export interface ComputerState {
      * Must be from 0-10
      */
     laser: number,
-    locations: NavigationData[],
+    locations?: NavigationData,
     courseLocation: string,
     shipFeatures: ShipFeature
 }
@@ -61,8 +61,7 @@ export const InitialComputerState: ComputerState = {
     shields: 0,
     engines: 0,
     laser: 0,
-    shipFeatures: ShipFeature.DockingOnline | ShipFeature.TractorOffline,
-    locations: [],
+    shipFeatures: ShipFeature.DockingOnline | ShipFeature.TractorOffline
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -82,24 +81,18 @@ export const computerReducer = createReducer<ComputerState>(
             locations: action.navs
         };
     }),
-    on(act.loadNavDataError, (state, action) => {
-        return {
-            ...state,
-            locations: []
-        };
-    }),
     on(act.engage, (state, action) => {
         let newState: Partial<ComputerState> = {};
 
         const splitNavigation = state.courseLocation.split('|');
         newState.shipFeatures = state.shipFeatures;
 
-        if(action.keyID === 'docking') {
+        if (action.keyID === 'docking') {
             newState.shipFeatures |= ShipFeature.DockingOnline;
             newState.shipFeatures &= ~ShipFeature.DockingOffline;
         }
 
-        if(action.keyID === 'tractorbeam') {
+        if (action.keyID === 'tractorbeam') {
             newState.shipFeatures |= ShipFeature.TractorOnline;
             newState.shipFeatures &= ~ShipFeature.TractorOffline;
         }
@@ -114,23 +107,21 @@ export const computerReducer = createReducer<ComputerState>(
         }
 
         //Exploding!
-        if(action.param.laser === 5) {
-            newState.locations = state.locations?.map(a => {
-                if(a.location === 'AsteroidBelt')
-                    return <NavigationData>{
-                        location: a.location,
-                        leftImage: a.leftImage,
-                        centerImage: '/assets/real_explode.gif',
-                        rightImage: a.rightImage
-                    };
-                return a;
-            });
+        if (action.param.laser === 5) {
+            if (state.locations?.location === 'AsteroidBelt') {
+                newState.locations = <NavigationData>{
+                    location: state.locations?.location,
+                    leftImage: state.locations?.leftImage,
+                    centerImage: '/assets/real_explode.gif',
+                    rightImage: state.locations?.rightImage
+                };
+            }
         }
 
         if (action.keyID === 'engines') {
             newState.shipFeatures |= ShipFeature.DockingOffline;
             newState.shipFeatures &= ~ShipFeature.DockingOnline;
-        
+
             if (action.param.engines == 5) {
                 newState.shields = 5;
                 if (splitNavigation[0] == "AsteroidBelt") {
@@ -150,16 +141,14 @@ export const computerReducer = createReducer<ComputerState>(
             newState.laser = 0;
             newState.engines = 0;
 
-            newState.locations = state.locations?.map(a => {
-                if(a.location === 'AsteroidBelt')
-                    return <NavigationData>{
-                        location: a.location,
-                        leftImage: a.leftImage,
-                        centerImage: undefined,
-                        rightImage: a.rightImage
-                    };
-                return a;
-            });
+            if (state.locations?.location === 'AsteroidBelt') {
+                newState.locations = <NavigationData>{
+                    location: state.locations?.location,
+                    leftImage: state.locations?.leftImage,
+                    centerImage: undefined,
+                    rightImage: state.locations?.rightImage
+                };
+            }
         }
 
         return {
@@ -173,7 +162,7 @@ export const computerReducer = createReducer<ComputerState>(
 
         const splitNavigation = state.courseLocation.split('|');
         newState.shipFeatures = state.shipFeatures;
-        
+
         if (action.keyID === 'docking') {
             newState.shipFeatures |= ShipFeature.DockingOffline;
             newState.shipFeatures &= ~ShipFeature.DockingOnline;
@@ -183,14 +172,14 @@ export const computerReducer = createReducer<ComputerState>(
             newState.shipFeatures |= ShipFeature.TractorOffline;
             newState.shipFeatures &= ~ShipFeature.TractorOnline;
 
-            newState.locations = state.locations?.map(a => {
-                if(a.location === splitNavigation[1])
-                    return <NavigationData>{
-                        location: a.location,
-                        centerImage: a.centerImage
-                    };
-                return a;
-            });
+            if (state.locations?.location === 'LunaOrbit') {
+                newState.locations = <NavigationData>{
+                    location: state.locations?.location,
+                    leftImage: undefined,
+                    centerImage: state.locations?.centerImage,
+                    rightImage: undefined
+                };
+            }
         }
 
         if (action.keyID === 'engines') {
@@ -209,9 +198,10 @@ export const computerReducer = createReducer<ComputerState>(
     on(act.plot, (state, action) => {
         let newState: Partial<ComputerState> = {};
 
-        newState.courseLocation = `${action.param.courseLocation}|`;
+        newState.courseLocation = `${action.courseLocation}|`;
+        newState.locations = action.locations;
 
-        switch (action.param.courseLocation) {
+        switch (action.courseLocation) {
             case 'AsteroidBelt':
                 newState.shields = 5;
                 newState.engines = 5;
@@ -226,7 +216,6 @@ export const computerReducer = createReducer<ComputerState>(
 
         return {
             ...state,
-            ...action.param,
             ...newState
         };
     }),
