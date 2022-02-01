@@ -6,7 +6,7 @@
 import { createAction, props } from "@ngrx/store";
 import { SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
-import { ComputerState, CourseLocation } from "./computer.reducer";
+import { ComputerState } from "./computer.reducer";
 
 export class ComputerAction {
     action: string;
@@ -50,4 +50,4 @@ export const loadNavDataError = createAction('[computer] Load Navigation Data Er
 export const engage = createAction('[computer] engage', props<{ keyID: string, param: Partial<ComputerState> }>())
 export const disengage = createAction('[computer] disengage', props<{ keyID: string, param: Partial<ComputerState> }>())
 export const beforePlot = createAction('[computer] before plot', props<{ course: SolarSystemLocation }>())
-export const plot = createAction('[computer] plot', props<{ courseLocation: CourseLocation, locations: NavigationData }>())
+export const plot = createAction('[computer] plot', props<{ locations: NavigationData }>())

@@ -28,7 +28,7 @@ export interface ViewscreenState {
 @Component({
   selector: 'app-viewscreen',
   templateUrl: './viewscreen.component.html',
-  styleUrls: ['./viewscreen.component.sass']
+  styleUrls: ['./viewscreen.component.sass'],
 })
 export class ViewscreenComponent {
 

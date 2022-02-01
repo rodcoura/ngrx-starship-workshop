@@ -7,8 +7,7 @@
  */
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
-import { SolarSystemLocation } from "../challenge.service";
-import { ComputerState, CourseLocation, ShipFeature } from "./computer.reducer";
+import { ComputerState, ShipFeature } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
 // https://ngrx.io/guide/store/selectors
@@ -16,16 +15,15 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let currentLocation: SolarSystemLocation;
 
         const location = state.locations;
 
         const view: ViewscreenState = {
-            location: ((state.courseLocation & CourseLocation.InLocation) === CourseLocation.InLocation) ? state.locations?.location : undefined,
-            course: ((state.courseLocation & CourseLocation.OnCourse) === CourseLocation.OnCourse) ? state.locations?.location : undefined,
+            location: !state.onCourse ? state.locations?.location : undefined,
+            course: state.onCourse ? state.locations?.location : undefined,
             leftImage: location?.leftImage,
-            centerImage: location?.centerImage,
-            rightImage: location?.rightImage,
+            centerImage: (state.onCourse && location?.location != "AsteroidBelt") ? undefined : location?.centerImage,
+            rightImage: (state.onCourse && location?.location != "AsteroidBelt") ? undefined : location?.rightImage,
             laser: state.laser > 0,
             tractor: (state.shipFeatures & ShipFeature.TractorOnline) === ShipFeature.TractorOnline,
         };

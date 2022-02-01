@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
-import { IComputerDirective, SolarSystemLocation } from "../challenge.service";
+import { IComputerDirective } from "../challenge.service";
 import * as act from "./computer.actions";
 import { ComputerAction } from "./computer.actions";
-import { CourseLocation } from "./computer.reducer";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -54,8 +53,8 @@ export class ComputerService {
     ];
 
     private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {
-        const paramKey: string = directive.directObject.split(' ')[0].replace('course', 'courseLocation');
-        let paramValue: number | boolean | CourseLocation | undefined;
+        const paramKey: string = directive.directObject.split(' ')[0];
+        let paramValue: number | boolean | undefined;
 
         //Parse possible adverb value
         switch (directive.adverb) {
