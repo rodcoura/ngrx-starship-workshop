@@ -16,11 +16,11 @@ export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
 
-        const location = state.locations;
+        const location = state.currentLocation;
 
         const view: ViewscreenState = {
-            location: !state.onCourse ? state.locations?.location : undefined,
-            course: state.onCourse ? state.locations?.location : undefined,
+            location: !state.onCourse ? state.currentLocation?.location : undefined,
+            course: state.onCourse ? state.currentLocation?.location : undefined,
             leftImage: location?.leftImage,
             centerImage: (state.onCourse && location?.location != "AsteroidBelt") ? undefined : location?.centerImage,
             rightImage: (state.onCourse && location?.location != "AsteroidBelt") ? undefined : location?.rightImage,

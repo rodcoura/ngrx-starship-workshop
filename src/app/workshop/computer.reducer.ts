@@ -50,7 +50,7 @@ export interface ComputerState {
      * Must be from 0-10
      */
     laser: number,
-    locations?: NavigationData,
+    currentLocation?: NavigationData,
     shipFeatures: ShipFeature
     onCourse: boolean // onCourse
 }
@@ -78,7 +78,7 @@ export const computerReducer = createReducer<ComputerState>(
     on(act.loadNavDataSuccess, (state, action) => {
         return {
             ...state,
-            locations: action.navs
+            currentLocation: action.navs
         };
     }),
     on(act.engage, (state, action) => {
@@ -109,12 +109,12 @@ export const computerReducer = createReducer<ComputerState>(
 
         //Exploding!
         if (action.param.laser === 5) {
-            if (state.locations?.location === 'AsteroidBelt') {
-                newState.locations = <NavigationData>{
-                    location: state.locations?.location,
-                    leftImage: state.locations?.leftImage,
+            if (state.currentLocation?.location === 'AsteroidBelt') {
+                newState.currentLocation = <NavigationData>{
+                    location: state.currentLocation?.location,
+                    leftImage: state.currentLocation?.leftImage,
                     centerImage: '/assets/real_explode.gif',
-                    rightImage: state.locations?.rightImage
+                    rightImage: state.currentLocation?.rightImage
                 };
             }
         }
@@ -125,14 +125,14 @@ export const computerReducer = createReducer<ComputerState>(
 
             if (action.param.engines == 5) {
                 newState.shields = 5;
-                if (state.locations?.location === "AsteroidBelt") {
+                if (state.currentLocation?.location === "AsteroidBelt") {
                     newState.onCourse = false;
                 }
             } else if (action.param.engines == 10) {
                 newState.laser = 0;
                 newState.shields = 0;
 
-                if (state.locations?.location === "LEO") {
+                if (state.currentLocation?.location === "LEO") {
                     newState.onCourse = false;
                 }
             }
@@ -142,12 +142,12 @@ export const computerReducer = createReducer<ComputerState>(
             newState.laser = 0;
             newState.engines = 0;
 
-            if (state.locations?.location === 'AsteroidBelt') {
-                newState.locations = <NavigationData>{
-                    location: state.locations?.location,
-                    leftImage: state.locations?.leftImage,
+            if (state.currentLocation?.location === 'AsteroidBelt') {
+                newState.currentLocation = <NavigationData>{
+                    location: state.currentLocation?.location,
+                    leftImage: state.currentLocation?.leftImage,
                     centerImage: undefined,
-                    rightImage: state.locations?.rightImage
+                    rightImage: state.currentLocation?.rightImage
                 };
             }
         }
@@ -172,11 +172,11 @@ export const computerReducer = createReducer<ComputerState>(
             newState.shipFeatures |= ShipFeature.TractorOffline;
             newState.shipFeatures &= ~ShipFeature.TractorOnline;
 
-            if (state.locations?.location === 'LunaOrbit') {
-                newState.locations = <NavigationData>{
-                    location: state.locations?.location,
+            if (state.currentLocation?.location === 'LunaOrbit') {
+                newState.currentLocation = <NavigationData>{
+                    location: state.currentLocation?.location,
                     leftImage: undefined,
-                    centerImage: state.locations?.centerImage,
+                    centerImage: state.currentLocation?.centerImage,
                     rightImage: undefined
                 };
             }
@@ -196,15 +196,15 @@ export const computerReducer = createReducer<ComputerState>(
     on(act.plot, (state, action) => {
         let newState: Partial<ComputerState> = {};
 
-        newState.locations = action.locations;
+        newState.currentLocation = action.currentLocation;
         newState.onCourse = true;
 
-        if (newState.locations.location === "AsteroidBelt") {
+        if (newState.currentLocation.location === "AsteroidBelt") {
             newState.shields = 5;
             newState.engines = 5;
-        } else if (newState.locations.location === "LunaOrbit") {
+        } else if (newState.currentLocation.location === "LunaOrbit") {
             newState.engines = 10;
-        } else if (newState.locations.location === "LEO") {
+        } else if (newState.currentLocation.location === "LEO") {
             newState.shields = 0;
         }
 

@@ -50,4 +50,4 @@ export const loadNavDataError = createAction('[computer] Load Navigation Data Er
 export const engage = createAction('[computer] engage', props<{ keyID: string, param: Partial<ComputerState> }>())
 export const disengage = createAction('[computer] disengage', props<{ keyID: string, param: Partial<ComputerState> }>())
 export const beforePlot = createAction('[computer] before plot', props<{ course: SolarSystemLocation }>())
-export const plot = createAction('[computer] plot', props<{ locations: NavigationData }>())
+export const plot = createAction('[computer] plot', props<{ currentLocation: NavigationData }>())

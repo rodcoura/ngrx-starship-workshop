@@ -25,7 +25,7 @@ export class NavDBEffects {
         this.actions$.pipe(
             ofType(beforePlot),
             switchMap(action => this.service.getNavigationData().pipe(
-                map(navs => plot({ locations: navs.filter(a => a.location === action.course)[0] }),     
+                map(navs => plot({ currentLocation: navs.filter(a => a.location === action.course)[0] }),
                 catchError(error => of(loadNavDataError())))
             ))
         )
