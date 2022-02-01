@@ -26,38 +26,17 @@ export class ComputerService {
      * this is called when the captain commands the computer to do one or more things
      */
     public InterpretDirectives(directives: IComputerDirective[]) {
-        let messages : string[] = [];
-        let parsedDirectives : ComputerAction[] = directives
-            .filter(d => 
-                directives.length == 1 || !this.unusedActions.some(u => JSON.stringify(u) == JSON.stringify(d))
-            )
+        let messages: string[] = [];
+        let parsedDirectives: ComputerAction[] = directives
+            .filter(d => directives.length == 1 || !this.unusedActions.some(u => JSON.stringify(u) == JSON.stringify(d)))
             .map(directive => {
                 messages.push(this.directiveToComputerMessage(directive));
                 return this.parseDirectiveToAction(directive);
-            }
-        );
+            });
 
-        // if(parsedDirectives.every(a => a.action == parsedDirectives[0].action)) {
-        //     let actionParams : any = {
-        //         keyIDs: [],
-        //         params: {}
-        //     };
-
-        //     parsedDirectives.forEach(parsedDirective => {
-        //         const computedParam = parsedDirective.toDispatchParameters();
-        //         actionParams.keyIDs.push(computedParam.keyID);
-        //         actionParams.params = {
-        //             ...actionParams.params,
-        //             ...computedParam.param
-        //         }
-        //     });
-        //     console.log(actionParams);
-        //     this.store.dispatch({ type: `[computer] ${parsedDirectives[0].action}`, ...actionParams });
-        // } else {
             parsedDirectives.forEach(parsedDirective => {
-                this.store.dispatch({ type: `[computer] ${parsedDirective.action}`, ...parsedDirective.toDispatchParameters() });
-            })  
-        // }
+            this.store.dispatch({ type: `[computer] ${parsedDirective.action}`, ...parsedDirective.toDispatchParameters() });
+        })
 
         this.store.dispatch(act.echo({ messages }));
         messages = [];
@@ -94,14 +73,14 @@ export class ComputerService {
 
         const actionFinale = new ComputerAction(directive.verb, paramKey);
 
-        if(paramKey) {
+        if (paramKey && paramKey != 'docking' && paramKey != 'tractorbeam') {
             actionFinale.addParam(paramKey, paramValue);
         }
 
         return actionFinale;
     }
 
-    private directiveToComputerMessage(d: IComputerDirective): string{
+    private directiveToComputerMessage(d: IComputerDirective): string {
         let result = "ACK > ";
         if (d.adverb)
             result += d.adverb.toUpperCase() + " ";
