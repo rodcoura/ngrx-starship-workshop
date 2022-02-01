@@ -2,6 +2,7 @@
  * this is a complete widget!
  * nothing is required to make it work, but you can improve it and make it better if you want
  */
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { share, tap } from 'rxjs';
@@ -28,7 +29,15 @@ export interface ViewscreenState {
 @Component({
   selector: 'app-viewscreen',
   templateUrl: './viewscreen.component.html',
-  styleUrls: ['./viewscreen.component.sass']
+  styleUrls: ['./viewscreen.component.sass'],
+  animations: [
+    trigger('fade', [ 
+      transition('void => *', [
+        style({ opacity: 0 }), 
+        animate(2000, style({opacity: 1}))
+      ]) 
+    ])
+  ]
 })
 export class ViewscreenComponent {
 

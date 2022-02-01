@@ -4,9 +4,9 @@
         <div style="z-index: 99999;">
             <div *ngIf="view.location" class="course">Currently in {{view.location}}</div>
             <div *ngIf="view.course" class="course">Course: {{view.course}}</div>
-            <img *ngIf="view.leftImage" [src]="view.leftImage" alt="" class="satellite left">
-            <img *ngIf="view.centerImage" [src]="view.centerImage" alt="" class="planetoid" @fadeIn>
-            <img *ngIf="view.rightImage" [src]="view.rightImage" alt="" class="satellite right">
+            <img *ngIf="view.leftImage" [src]="view.leftImage" alt="" class="satellite left" @fade>
+            <img *ngIf="view.centerImage" [src]="view.centerImage" alt="" class="planetoid" @fade>
+            <img *ngIf="view.rightImage" [src]="view.rightImage" alt="" class="satellite right" @fade>
             <img *ngIf="view.laser" src="/assets/laser.gif" alt="" class="effect">
             <img *ngIf="view.tractor" src="/assets/tractor.gif" alt="" class="effect tractor">
         </div>
