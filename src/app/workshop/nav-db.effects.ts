@@ -12,6 +12,14 @@ export class NavDBEffects {
         private service: NavDBService
     ) { }
 
+    parseCourse(course: string) : CourseLocation {
+        switch (course) {
+            case 'LunaOrbit': return CourseLocation.LunaOrbit;
+            case 'AsteroidBelt': return CourseLocation.AsteroidBelt;
+            default: return CourseLocation.LEO;
+        }
+    }
+
     loadNavigationData$ = createEffect(() =>
         this.actions$.pipe(
             ofType(loadNavData),
@@ -22,22 +30,14 @@ export class NavDBEffects {
         )
     );
 
-    parseCourse(course: string) : CourseLocation {
-        switch (course) {
-            case 'LunaOrbit':
-                return CourseLocation.LunaOrbit;
-            case 'AsteroidBelt':
-                return CourseLocation.AsteroidBelt;
-            default:
-                return CourseLocation.LEO;
-        }
-    }
-
     beforePlot$ = createEffect(() =>
         this.actions$.pipe(
             ofType(beforePlot),
             switchMap(action => this.service.getNavigationData().pipe(
-                map(navs => plot({ locations: navs.filter(a => a.location === action.course)[0], courseLocation: this.parseCourse(action.course) }),
+                map(navs => plot({ 
+                    locations: navs.filter(a => a.location === action.course)[0], 
+                    courseLocation: this.parseCourse(action.course) 
+                }),
                 catchError(error => of(loadNavDataError())))
             ))
         )
