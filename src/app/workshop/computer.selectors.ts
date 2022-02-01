@@ -8,7 +8,7 @@
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
 import { SolarSystemLocation } from "../challenge.service";
-import { ComputerState, ShipFeature } from "./computer.reducer";
+import { ComputerState, CourseLocation, ShipFeature } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
 // https://ngrx.io/guide/store/selectors
@@ -16,16 +16,13 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        const splitNavigation = state.courseLocation.split('|');
+        let currentLocation: SolarSystemLocation;
 
-        const stateCourse = (splitNavigation[0] ? splitNavigation[0] : undefined) as SolarSystemLocation | undefined;
-        const stateLocation = (splitNavigation[1] ? splitNavigation[1] : undefined) as SolarSystemLocation | undefined;
-        
         const location = state.locations;
 
         const view: ViewscreenState = {
-            location: stateLocation,
-            course: stateCourse,
+            location: ((state.courseLocation & CourseLocation.InLocation) === CourseLocation.InLocation) ? state.locations?.location : undefined,
+            course: ((state.courseLocation & CourseLocation.OnCourse) === CourseLocation.OnCourse) ? state.locations?.location : undefined,
             leftImage: location?.leftImage,
             centerImage: location?.centerImage,
             rightImage: location?.rightImage,

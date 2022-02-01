@@ -4,6 +4,7 @@ import { AppState } from "../app.state";
 import { IComputerDirective, SolarSystemLocation } from "../challenge.service";
 import * as act from "./computer.actions";
 import { ComputerAction } from "./computer.actions";
+import { CourseLocation } from "./computer.reducer";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -54,7 +55,7 @@ export class ComputerService {
 
     private parseDirectiveToAction(directive: IComputerDirective): ComputerAction {
         const paramKey: string = directive.directObject.split(' ')[0].replace('course', 'courseLocation');
-        let paramValue: number | boolean | SolarSystemLocation | undefined;
+        let paramValue: number | boolean | CourseLocation | undefined;
 
         //Parse possible adverb value
         switch (directive.adverb) {
@@ -68,15 +69,12 @@ export class ComputerService {
         switch (directive.adjectivalPhrase) {
             case 'to Luna orbit': 
                 this.store.dispatch({ type: `[computer] before plot`, course : 'LunaOrbit' });
-                paramValue = 'LunaOrbit'; 
                 break;
             case 'to the asteroid belt': 
                 this.store.dispatch({ type: `[computer] before plot`, course : 'AsteroidBelt' });
-                paramValue = 'AsteroidBelt'; 
                 break;
             case 'to LEO': 
                 this.store.dispatch({ type: `[computer] before plot`, course : 'LEO' });
-                paramValue = 'LEO'; 
                 break;
             default: break;
         }
